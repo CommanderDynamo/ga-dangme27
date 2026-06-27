@@ -1,0 +1,231 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Lato:wght@300;400;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* ── Neutral Canvas ───────────────────────────────────── */
+    --background: 0 0% 98%;
+    --foreground: 210 10% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 210 10% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 10% 10%;
+
+    /* ── Deep Teal Primary  #0E3C3D ──────────────────────── */
+    --primary: 181 65% 15%;
+    --primary-foreground: 0 0% 100%;
+
+    /* ── Warm Amber Accent  #E8A020 ──────────────────────── */
+    --secondary: 38 82% 52%;
+    --secondary-foreground: 210 10% 10%;
+
+    --muted: 180 10% 93%;
+    --muted-foreground: 210 8% 42%;
+
+    --accent: 38 82% 52%;
+    --accent-foreground: 210 10% 10%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 180 10% 88%;
+    --input: 180 10% 88%;
+    --ring: 181 65% 15%;
+
+    --radius: 0.75rem;
+
+    /* ── Heritage tokens ─────────────────────────────────── */
+    --heritage-burgundy: 181 65% 15%;
+    --heritage-gold:     38 82% 52%;
+    --heritage-cream:    0 0% 98%;
+    --heritage-dark:     210 10% 10%;
+    --heritage-warm:     150 18% 96%;
+    --heritage-amber-bg: 38 70% 97%;
+
+    /* ── Gradients ───────────────────────────────────────── */
+    --gradient-hero:    linear-gradient(140deg, hsl(181 65% 9%) 0%, hsl(181 55% 22%) 100%);
+    --gradient-gold:    linear-gradient(135deg, hsl(38 82% 46%) 0%, hsl(38 82% 58%) 100%);
+    --gradient-overlay: linear-gradient(180deg, hsl(181 65% 12% / 0.65) 0%, hsl(181 65% 12% / 0.92) 100%);
+
+    /* ── Shadows ─────────────────────────────────────────── */
+    --shadow-soft:     0 2px 12px hsl(181 65% 15% / 0.07), 0 1px 3px hsl(181 65% 15% / 0.05);
+    --shadow-elevated: 0 12px 40px -8px hsl(181 65% 15% / 0.18), 0 4px 12px hsl(181 65% 15% / 0.07);
+    --shadow-glow:     0 0 0 1px hsl(38 82% 52% / 0.35), 0 6px 28px hsl(38 82% 52% / 0.25);
+
+    /* ── Typography ──────────────────────────────────────── */
+    --font-heading: 'Playfair Display', Georgia, serif;
+    --font-body:    'Lato', system-ui, sans-serif;
+
+    /* Sidebar */
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 0 0% 8%;
+    --foreground: 180 20% 93%;
+    --card: 0 0% 11%;
+    --card-foreground: 180 20% 93%;
+    --popover: 0 0% 11%;
+    --popover-foreground: 180 20% 93%;
+    --primary: 38 82% 52%;
+    --primary-foreground: 210 10% 10%;
+    --secondary: 181 65% 15%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 0% 16%;
+    --muted-foreground: 180 12% 65%;
+    --accent: 38 82% 52%;
+    --accent-foreground: 210 10% 10%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 18%;
+    --input: 0 0% 18%;
+    --ring: 38 82% 52%;
+  }
+}
+
+@layer base {
+  * { @apply border-border; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3, h4, h5, h6 { @apply font-heading; }
+}
+
+@layer components {
+
+  /* ── Layout ────────────────────────────────────────────── */
+  .heritage-container {
+    @apply max-w-7xl mx-auto px-5 sm:px-8 lg:px-10;
+  }
+
+  .heritage-section {
+    @apply py-20 md:py-28;
+  }
+
+  /* ── Typography ────────────────────────────────────────── */
+  .heritage-heading {
+    @apply font-heading font-semibold tracking-tight leading-[1.1];
+  }
+
+  .heritage-subheading {
+    @apply font-heading text-xl md:text-2xl font-medium leading-snug;
+  }
+
+  .heritage-text {
+    @apply font-body text-base md:text-lg leading-relaxed;
+  }
+
+  /* Small eyebrow label above a heading */
+  .section-eyebrow {
+    @apply inline-flex items-center gap-2 font-body text-[11px] font-semibold
+           uppercase tracking-[0.28em] text-secondary;
+  }
+
+  /* Amber rule used as a visual accent line */
+  .amber-rule {
+    @apply block w-10 h-[3px] rounded-full bg-secondary;
+  }
+
+  /* ── Buttons ────────────────────────────────────────────── */
+
+  /* Primary teal button */
+  .btn-heritage {
+    @apply inline-flex items-center justify-center
+           px-7 py-3.5 rounded-lg
+           bg-primary text-primary-foreground
+           font-body font-semibold text-sm tracking-wide
+           transition-all duration-300 ease-out
+           hover:bg-primary/90 hover:shadow-elevated hover:-translate-y-px
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+  }
+
+  /* Amber/gold CTA button */
+  .btn-heritage-gold {
+    @apply inline-flex items-center justify-center
+           px-7 py-3.5 rounded-lg
+           bg-secondary text-secondary-foreground
+           font-body font-bold text-sm tracking-wide
+           transition-all duration-300 ease-out
+           hover:bg-secondary/90 hover:shadow-elevated hover:-translate-y-px
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2;
+  }
+
+  /* Ghost / outline button */
+  .btn-heritage-outline {
+    @apply inline-flex items-center justify-center
+           px-7 py-3.5 rounded-lg
+           border-2 border-primary text-primary
+           font-body font-semibold text-sm tracking-wide
+           transition-all duration-300 ease-out
+           hover:bg-primary hover:text-primary-foreground
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+  }
+
+  /* ── Cards ──────────────────────────────────────────────── */
+  .card-heritage {
+    @apply bg-card rounded-2xl overflow-hidden shadow-soft border border-border/60
+           transition-all duration-300 ease-out
+           hover:shadow-elevated hover:-translate-y-1;
+  }
+
+  /* ── Form inputs ────────────────────────────────────────── */
+  .input-heritage {
+    @apply w-full px-4 py-3 bg-background border border-input rounded-lg
+           font-body text-sm text-foreground
+           transition-all duration-200
+           focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary
+           placeholder:text-muted-foreground;
+  }
+
+  /* ── Animated underline link ────────────────────────────── */
+  .heritage-link {
+    @apply relative inline-block
+           after:content-[''] after:absolute after:w-full after:scale-x-0
+           after:h-0.5 after:bottom-0 after:left-0 after:bg-primary
+           after:origin-bottom-right after:transition-transform after:duration-300
+           hover:after:scale-x-100 hover:after:origin-bottom-left;
+  }
+}
+
+@layer utilities {
+  /* Hide scrollbar but keep scrollable */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+
+  .animate-fade-in     { animation: fadeIn    0.6s ease-out forwards; }
+  .animate-fade-in-up  { animation: fadeInUp  0.65s ease-out forwards; }
+  .animate-slide-up    { animation: slideUp   0.55s ease-out forwards; }
+  .animate-scale-in    { animation: scaleIn   0.45s ease-out forwards; }
+
+  .animation-delay-100 { animation-delay:  100ms; }
+  .animation-delay-200 { animation-delay:  200ms; }
+  .animation-delay-300 { animation-delay:  300ms; }
+  .animation-delay-400 { animation-delay:  400ms; }
+  .animation-delay-500 { animation-delay:  500ms; }
+}
+
+@keyframes fadeIn    { from { opacity: 0; }                                  to { opacity: 1; } }
+@keyframes fadeInUp  { from { opacity: 0; transform: translateY(22px); }     to { opacity: 1; transform: translateY(0); } }
+@keyframes slideUp   { from { opacity: 0; transform: translateY(40px); }     to { opacity: 1; transform: translateY(0); } }
+@keyframes scaleIn   { from { opacity: 0; transform: scale(0.94); }          to { opacity: 1; transform: scale(1); } }
