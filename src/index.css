@@ -6,56 +6,56 @@
 
 @layer base {
   :root {
-    /* ── Neutral Canvas ───────────────────────────────────── */
-    --background: 0 0% 98%;
-    --foreground: 210 10% 10%;
+    /* ── Warm Canvas ──────────────────────────────────────── */
+    --background: 38 50% 97%;
+    --foreground: 30 18% 12%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 210 10% 10%;
+    --card: 36 60% 99%;
+    --card-foreground: 30 18% 12%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 210 10% 10%;
+    --popover: 36 60% 99%;
+    --popover-foreground: 30 18% 12%;
 
-    /* ── Deep Teal Primary  #0E3C3D ──────────────────────── */
-    --primary: 181 65% 15%;
+    /* ── Warm Forest Green Primary  #1C4A34 ───────────────── */
+    --primary: 148 45% 20%;
     --primary-foreground: 0 0% 100%;
 
-    /* ── Warm Amber Accent  #E8A020 ──────────────────────── */
-    --secondary: 38 82% 52%;
-    --secondary-foreground: 210 10% 10%;
+    /* ── Warm Golden Amber Secondary  #F5A700 ─────────────── */
+    --secondary: 42 92% 50%;
+    --secondary-foreground: 30 20% 10%;
 
-    --muted: 180 10% 93%;
-    --muted-foreground: 210 8% 42%;
+    --muted: 38 22% 91%;
+    --muted-foreground: 35 14% 44%;
 
-    --accent: 38 82% 52%;
-    --accent-foreground: 210 10% 10%;
+    --accent: 42 92% 50%;
+    --accent-foreground: 30 20% 10%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 180 10% 88%;
-    --input: 180 10% 88%;
-    --ring: 181 65% 15%;
+    --border: 38 16% 86%;
+    --input: 38 16% 86%;
+    --ring: 148 45% 20%;
 
     --radius: 0.75rem;
 
     /* ── Heritage tokens ─────────────────────────────────── */
-    --heritage-burgundy: 181 65% 15%;
-    --heritage-gold:     38 82% 52%;
-    --heritage-cream:    0 0% 98%;
-    --heritage-dark:     210 10% 10%;
-    --heritage-warm:     150 18% 96%;
-    --heritage-amber-bg: 38 70% 97%;
+    --heritage-burgundy: 148 45% 20%;
+    --heritage-gold:     42 92% 50%;
+    --heritage-cream:    38 50% 97%;
+    --heritage-dark:     30 18% 12%;
+    --heritage-warm:     38 30% 94%;
+    --heritage-amber-bg: 42 65% 96%;
 
     /* ── Gradients ───────────────────────────────────────── */
-    --gradient-hero:    linear-gradient(140deg, hsl(181 65% 9%) 0%, hsl(181 55% 22%) 100%);
-    --gradient-gold:    linear-gradient(135deg, hsl(38 82% 46%) 0%, hsl(38 82% 58%) 100%);
-    --gradient-overlay: linear-gradient(180deg, hsl(181 65% 12% / 0.65) 0%, hsl(181 65% 12% / 0.92) 100%);
+    --gradient-hero:    linear-gradient(140deg, hsl(148 55% 10%) 0%, hsl(148 42% 22%) 100%);
+    --gradient-gold:    linear-gradient(135deg, hsl(42 92% 44%) 0%, hsl(42 90% 56%) 100%);
+    --gradient-overlay: linear-gradient(180deg, hsl(148 45% 12% / 0.65) 0%, hsl(148 45% 12% / 0.92) 100%);
 
     /* ── Shadows ─────────────────────────────────────────── */
-    --shadow-soft:     0 2px 12px hsl(181 65% 15% / 0.07), 0 1px 3px hsl(181 65% 15% / 0.05);
-    --shadow-elevated: 0 12px 40px -8px hsl(181 65% 15% / 0.18), 0 4px 12px hsl(181 65% 15% / 0.07);
-    --shadow-glow:     0 0 0 1px hsl(38 82% 52% / 0.35), 0 6px 28px hsl(38 82% 52% / 0.25);
+    --shadow-soft:     0 2px 12px hsl(148 45% 20% / 0.08), 0 1px 3px hsl(148 45% 20% / 0.05);
+    --shadow-elevated: 0 12px 40px -8px hsl(148 45% 20% / 0.20), 0 4px 12px hsl(148 45% 20% / 0.08);
+    --shadow-glow:     0 0 0 1px hsl(42 92% 50% / 0.35), 0 6px 28px hsl(42 92% 50% / 0.25);
 
     /* ── Typography ──────────────────────────────────────── */
     --font-heading: 'Playfair Display', Georgia, serif;
@@ -73,25 +73,25 @@
   }
 
   .dark {
-    --background: 0 0% 8%;
-    --foreground: 180 20% 93%;
-    --card: 0 0% 11%;
-    --card-foreground: 180 20% 93%;
-    --popover: 0 0% 11%;
-    --popover-foreground: 180 20% 93%;
-    --primary: 38 82% 52%;
-    --primary-foreground: 210 10% 10%;
-    --secondary: 181 65% 15%;
+    --background: 30 12% 8%;
+    --foreground: 38 20% 93%;
+    --card: 30 10% 11%;
+    --card-foreground: 38 20% 93%;
+    --popover: 30 10% 11%;
+    --popover-foreground: 38 20% 93%;
+    --primary: 42 92% 50%;
+    --primary-foreground: 30 20% 10%;
+    --secondary: 148 45% 20%;
     --secondary-foreground: 0 0% 100%;
-    --muted: 0 0% 16%;
-    --muted-foreground: 180 12% 65%;
-    --accent: 38 82% 52%;
-    --accent-foreground: 210 10% 10%;
+    --muted: 30 8% 16%;
+    --muted-foreground: 38 14% 62%;
+    --accent: 42 92% 50%;
+    --accent-foreground: 30 20% 10%;
     --destructive: 0 62% 30%;
     --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 18%;
-    --input: 0 0% 18%;
-    --ring: 38 82% 52%;
+    --border: 30 8% 18%;
+    --input: 30 8% 18%;
+    --ring: 42 92% 50%;
   }
 }
 

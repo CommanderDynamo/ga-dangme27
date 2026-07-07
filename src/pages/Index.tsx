@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
   ArrowRight, Users, Calendar, Globe, Heart,
-  ChevronLeft, ChevronRight, CheckCircle2,
+  ChevronLeft, ChevronRight, CheckCircle2, Play,
 } from 'lucide-react';
 import useEmblaCarousel from 'embla-carousel-react';
 import Layout from '@/components/Layout';
@@ -22,7 +22,8 @@ const _videoMods = import.meta.glob(
 ) as Record<string, string>;
 
 const ann = Object.keys(_annMods).sort().map((k) => _annMods[k]);
-const heroVideo = Object.values(_videoMods)[0] ?? '';
+const videos = Object.values(_videoMods);
+const heroVideo = videos[0] ?? '';
 
 // ─── Static data ───────────────────────────────────────────────────────────────
 
@@ -67,7 +68,7 @@ const culturalItems: CulturalItem[] = [
   },
 ];
 
-const stripPhotos = [ann[0], ann[4], ann[7], ann[13], ann[17], ann[22], ann[26], ann[30]];
+const stripPhotos = [ann[0], ann[4], ann[7], ann[13], ann[17], ann[22], ann[26], ann[30]].filter(Boolean) as string[];
 
 // ─── Fading photo card ─────────────────────────────────────────────────────────
 
@@ -85,17 +86,17 @@ const FadingPhotoCard = ({
 
   useEffect(() => {
     if (photos.length <= 1) return;
-    const t = setInterval(() => setIdx((i) => (i + 1) % photos.length), 2600);
+    const t = setInterval(() => setIdx((i) => (i + 1) % photos.length), 3200);
     return () => clearInterval(t);
   }, [photos.length]);
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 28 }}
+      initial={{ opacity: 0, y: 18 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ delay: index * 0.13, duration: 0.65 }}
-      className="group relative overflow-hidden rounded-2xl aspect-[4/3] cursor-pointer shadow-soft hover:shadow-elevated transition-all duration-500"
+      transition={{ delay: index * 0.12, duration: 0.6 }}
+      className="group relative overflow-hidden rounded-2xl aspect-[16/10] cursor-pointer shadow-soft hover:shadow-elevated transition-shadow duration-400"
       onClick={onClick}
     >
       {photos.map((src, i) => (
@@ -103,21 +104,20 @@ const FadingPhotoCard = ({
           key={i}
           src={src}
           alt={item.alt}
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+          className={`absolute inset-0 w-full h-full object-cover object-top transition-opacity duration-1000 ${
             i === idx ? 'opacity-100' : 'opacity-0'
           }`}
         />
       ))}
 
-      {/* Gradient overlay — deepens on hover */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#061a1a]/95 via-[#061a1a]/25 to-transparent opacity-70 group-hover:opacity-100 transition-opacity duration-500" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#071a0c]/90 via-[#071a0c]/20 to-transparent opacity-65 group-hover:opacity-100 transition-opacity duration-400" />
 
       {/* Progress dots */}
       <div className="absolute top-4 right-4 flex gap-1.5 z-10">
         {photos.map((_, i) => (
           <span
             key={i}
-            className={`block rounded-full transition-all duration-500 ${
+            className={`block rounded-full transition-all duration-400 ${
               i === idx ? 'w-5 h-1.5 bg-secondary' : 'w-1.5 h-1.5 bg-white/35'
             }`}
           />
@@ -125,15 +125,15 @@ const FadingPhotoCard = ({
       </div>
 
       {/* Text reveal */}
-      <div className="absolute bottom-0 left-0 right-0 p-7 z-10 translate-y-1.5 group-hover:translate-y-0 transition-transform duration-500">
-        <span className="block w-6 h-[2px] bg-secondary mb-3 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-75" />
+      <div className="absolute bottom-0 left-0 right-0 p-6 z-10">
+        <span className="block w-6 h-[2px] bg-secondary mb-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         <h3 className="font-heading text-xl text-white font-semibold mb-2 leading-snug">
           {item.title}
         </h3>
-        <p className="font-body text-[13px] text-white/65 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 line-clamp-2 leading-relaxed">
+        <p className="font-body text-[13px] text-white/65 opacity-0 group-hover:opacity-100 transition-opacity duration-300 line-clamp-2 leading-relaxed">
           {item.description.substring(0, 110)}…
         </p>
-        <span className="inline-flex items-center gap-1.5 mt-3.5 text-secondary text-xs font-semibold uppercase tracking-wide opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-150">
+        <span className="inline-flex items-center gap-1.5 mt-3 text-secondary text-xs font-semibold uppercase tracking-wide opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           View More <ArrowRight size={13} />
         </span>
       </div>
@@ -145,105 +145,106 @@ const FadingPhotoCard = ({
 
 const Index = () => {
   const [selectedItem, setSelectedItem] = useState<CulturalItem | null>(null);
-  const { scrollYProgress } = useScroll();
-  const heroScale   = useTransform(scrollYProgress, [0, 0.3], [1, 1.14]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.28], [1, 0]);
+  const [videoPlaying, setVideoPlaying] = useState(false);
 
+  // Carousel state
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: 'start' });
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
+
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
 
   useEffect(() => {
     if (!emblaApi) return;
-    const t = setInterval(() => emblaApi.scrollNext(), 3800);
-    return () => clearInterval(t);
+    const onSelect = () => setSelectedIndex(emblaApi.selectedScrollSnap());
+    setScrollSnaps(emblaApi.scrollSnapList());
+    onSelect();
+    emblaApi.on('select', onSelect);
+    const t = setInterval(() => emblaApi.scrollNext(), 4000);
+    return () => {
+      clearInterval(t);
+      emblaApi.off('select', onSelect);
+    };
   }, [emblaApi]);
 
   return (
     <Layout>
 
       {/* ══════════════════════════════════════════════════════════════════════
-          1 · HERO — full-screen editorial layout
+          1 · HERO — full-screen with video background
       ════════════════════════════════════════════════════════════════════════ */}
       <section className="relative min-h-screen flex flex-col overflow-hidden">
 
-        {/* Parallax background */}
-        <motion.div className="absolute inset-0" style={{ scale: heroScale }}>
+        {/* Background — video or image, no parallax */}
+        <div className="absolute inset-0">
           {heroVideo ? (
-            <video autoPlay muted loop playsInline poster={ann[13]} className="w-full h-full object-cover">
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              poster={ann[13]}
+              className="w-full h-full object-cover object-top"
+            >
               <source src={heroVideo} type="video/mp4" />
             </video>
           ) : (
-            <img src={ann[13]} alt="GaDangme Union community" className="w-full h-full object-cover" />
+            <img src={ann[13]} alt="GaDangme Union community" className="w-full h-full object-cover object-top" />
           )}
-          {/* Two-layer overlay: colour wash + dark vignette */}
-          <div className="absolute inset-0 bg-gradient-to-br from-[#061a1a]/85 via-primary/60 to-primary/92" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#061a1a]/50 to-transparent" />
-        </motion.div>
+          {/* Warm green overlay — welcoming, not cold */}
+          <div className="absolute inset-0 bg-gradient-to-br from-[#071a0c]/88 via-primary/58 to-primary/90" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#071a0c]/45 to-transparent" />
+        </div>
 
-        {/* Left amber accent stripe */}
-        <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-transparent via-secondary/60 to-transparent z-10" />
+        {/* Amber left accent stripe */}
+        <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-transparent via-secondary/55 to-transparent z-10" />
 
-        {/* Main content */}
-        <motion.div
-          style={{ opacity: heroOpacity }}
-          className="relative z-10 flex-1 flex items-center"
-        >
+        {/* Hero content — CSS fade-in, no scroll-based effects */}
+        <div className="relative z-10 flex-1 flex items-center">
           <div className="heritage-container py-40 md:py-48">
-            <motion.div
-              initial={{ opacity: 0, x: -28 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.95, ease: [0.22, 1, 0.36, 1] }}
-              className="max-w-3xl"
-            >
+            <div className="max-w-3xl animate-fade-in">
+
               {/* Amber rule */}
-              <motion.div
-                initial={{ scaleX: 0 }}
-                animate={{ scaleX: 1 }}
-                transition={{ delay: 0.15, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                style={{ transformOrigin: 'left' }}
-                className="w-16 h-[3px] rounded-full bg-secondary mb-6"
-              />
+              <div className="w-16 h-[3px] rounded-full bg-secondary mb-6" />
 
               {/* Eyebrow */}
-              <motion.p
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3, duration: 0.55 }}
-                className="section-eyebrow text-secondary/85 mb-8"
+              <p
+                className="section-eyebrow text-secondary/85 mb-8 animate-fade-in-up"
+                style={{ animationDelay: '0.2s', opacity: 0, animationFillMode: 'forwards' }}
               >
                 United in Heritage &nbsp;·&nbsp; The Netherlands Since 2012
-              </motion.p>
+              </p>
 
               {/* Main headline */}
-              <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.42, duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
-                className="font-heading font-semibold text-white"
-                style={{ fontSize: 'clamp(4.2rem, 11.5vw, 9.5rem)', lineHeight: '0.91', letterSpacing: '-0.025em' }}
+              <h1
+                className="font-heading font-semibold text-white animate-fade-in-up"
+                style={{
+                  fontSize: 'clamp(3.8rem, 10.5vw, 9rem)',
+                  lineHeight: '0.92',
+                  letterSpacing: '-0.025em',
+                  animationDelay: '0.35s',
+                  opacity: 0,
+                  animationFillMode: 'forwards',
+                }}
               >
                 GaDangme<br />
                 <em className="not-italic text-secondary">Union</em>
-              </motion.h1>
+              </h1>
 
               {/* Body copy */}
-              <motion.p
-                initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.58, duration: 0.6 }}
-                className="font-body text-[1.1rem] text-white/68 max-w-[470px] mt-9 mb-11 leading-[1.8]"
+              <p
+                className="font-body text-[1.05rem] text-white/72 max-w-[460px] mt-8 mb-10 leading-[1.85] animate-fade-in-up"
+                style={{ animationDelay: '0.5s', opacity: 0, animationFillMode: 'forwards' }}
               >
                 A community union for persons of GaDangme origin and speakers of the
                 Ga and Dangme languages — building a home away from home in the Netherlands.
-              </motion.p>
+              </p>
 
               {/* CTAs */}
-              <motion.div
-                initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.72, duration: 0.55 }}
-                className="flex flex-wrap gap-4"
+              <div
+                className="flex flex-wrap gap-4 animate-fade-in-up"
+                style={{ animationDelay: '0.65s', opacity: 0, animationFillMode: 'forwards' }}
               >
                 <Link to="/gallery" className="btn-heritage-gold group">
                   Explore Gallery
@@ -255,24 +256,22 @@ const Index = () => {
                 >
                   Our Story
                 </Link>
-              </motion.div>
-            </motion.div>
+              </div>
+            </div>
           </div>
-        </motion.div>
+        </div>
 
-        {/* Stats anchor bar — locked to bottom of hero */}
-        <div className="relative z-20 bg-white/[0.97] backdrop-blur-xl border-t-2 border-secondary/30">
+        {/* Stats anchor bar */}
+        <div className="relative z-20 bg-white/[0.97] backdrop-blur-xl border-t-2 border-secondary/25">
           <div className="heritage-container">
             <div className="grid grid-cols-2 md:grid-cols-4">
               {stats.map((s, i) => (
-                <motion.div
+                <div
                   key={s.label}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.85 + i * 0.09, duration: 0.5 }}
-                  className={`group py-6 px-5 text-center cursor-default transition-colors duration-200 hover:bg-primary/[0.04] ${
+                  className={`py-6 px-5 text-center hover:bg-primary/[0.04] transition-colors duration-200 animate-fade-in-up ${
                     i < stats.length - 1 ? 'border-r border-border/50' : ''
                   }`}
+                  style={{ animationDelay: `${0.7 + i * 0.08}s`, opacity: 0, animationFillMode: 'forwards' }}
                 >
                   <s.icon className="w-3.5 h-3.5 text-secondary mx-auto mb-2" />
                   <p className="font-heading text-2xl font-bold text-foreground leading-none tracking-tight mb-1">
@@ -281,7 +280,7 @@ const Index = () => {
                   <p className="font-body text-[10.5px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                     {s.label}
                   </p>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
@@ -291,32 +290,31 @@ const Index = () => {
       {/* ══════════════════════════════════════════════════════════════════════
           2 · WHO WE ARE — 2-col editorial split
       ════════════════════════════════════════════════════════════════════════ */}
-      <section className="py-28 md:py-36 bg-background overflow-hidden">
+      <section className="py-24 md:py-32 bg-background overflow-hidden">
         <div className="heritage-container">
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-14 items-center">
 
             {/* Text column */}
             <motion.div
-              initial={{ opacity: 0, x: -32 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.7 }}
               className="lg:col-span-2 flex flex-col"
             >
-              {/* Eyebrow */}
               <div className="flex items-center gap-3 mb-6">
                 <span className="amber-rule" />
                 <span className="section-eyebrow">Who We Are</span>
               </div>
 
               <h2
-                className="font-heading font-semibold text-foreground mb-6 leading-[1.08]"
-                style={{ fontSize: 'clamp(2.2rem, 4vw, 3.2rem)', letterSpacing: '-0.018em' }}
+                className="font-heading font-semibold text-foreground mb-6 leading-[1.1]"
+                style={{ fontSize: 'clamp(2.2rem, 4vw, 3.1rem)', letterSpacing: '-0.018em' }}
               >
                 A Home Away<br />From Home
               </h2>
 
-              <p className="font-body text-muted-foreground leading-[1.85] text-[15px] mb-9">
+              <p className="font-body text-muted-foreground leading-[1.88] text-[15px] mb-8">
                 Founded on 19 January 2012, GaDangme Union – The Netherlands unites
                 persons of GaDangme origin and speakers of the Ga and Dangme languages.
                 We support our members, celebrate our heritage, and stay connected across
@@ -327,7 +325,7 @@ const Index = () => {
                 {pillars.map((p) => (
                   <li key={p} className="flex items-start gap-3.5">
                     <CheckCircle2 className="w-[18px] h-[18px] text-secondary flex-shrink-0 mt-[3px]" />
-                    <span className="font-body text-[14px] text-foreground leading-[1.7]">{p}</span>
+                    <span className="font-body text-[14px] text-foreground leading-[1.75]">{p}</span>
                   </li>
                 ))}
               </ul>
@@ -338,34 +336,53 @@ const Index = () => {
               </Link>
             </motion.div>
 
-            {/* Photo column */}
+            {/* Photo column — 2-panel grid with explicit heights */}
             <motion.div
-              initial={{ opacity: 0, x: 32 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.75, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-              className="lg:col-span-3 relative pt-6 pb-6 pl-0 pr-6"
+              transition={{ duration: 0.7, delay: 0.15 }}
+              className="lg:col-span-3 relative"
             >
-              {/* Amber offset block behind photo */}
-              <div className="absolute top-0 right-0 w-[88%] h-[90%] rounded-2xl bg-secondary/18" />
+              <div className="grid grid-cols-2 gap-3">
 
-              <img
-                src={ann[5] ?? ann[13]}
-                alt="GaDangme Union community members"
-                className="relative w-full rounded-2xl shadow-elevated object-cover"
-                style={{ maxHeight: '540px' }}
-              />
+                {/* Tall left photo */}
+                <div className="relative rounded-2xl overflow-hidden shadow-elevated" style={{ height: '420px' }}>
+                  <img
+                    src={ann[5] ?? ann[0]}
+                    alt="GaDangme Union community members"
+                    className="absolute inset-0 w-full h-full object-cover object-top"
+                  />
+                  {/* Years badge pinned to bottom-left of this photo */}
+                  <div className="absolute bottom-4 left-4 bg-primary text-primary-foreground px-5 py-4 rounded-xl shadow-elevated">
+                    <p className="font-heading text-3xl font-bold leading-none tracking-tight">13+</p>
+                    <p className="font-body text-[10px] text-primary-foreground/65 mt-1 uppercase tracking-[0.18em]">Years of Unity</p>
+                  </div>
+                </div>
 
-              {/* Floating badge — years of unity */}
-              <div className="absolute -bottom-3 -left-3 bg-primary text-primary-foreground px-6 py-5 rounded-2xl shadow-elevated">
-                <p className="font-heading text-4xl font-bold leading-none tracking-tight">13+</p>
-                <p className="font-body text-[11px] text-primary-foreground/65 mt-1.5 uppercase tracking-[0.2em]">Years of Unity</p>
-              </div>
+                {/* Right column — 2 stacked photos */}
+                <div className="flex flex-col gap-3">
+                  <div className="relative rounded-2xl overflow-hidden shadow-soft" style={{ height: '200px' }}>
+                    <img
+                      src={ann[13] ?? ann[1]}
+                      alt="GaDangme Union celebration"
+                      className="absolute inset-0 w-full h-full object-cover object-top"
+                    />
+                  </div>
+                  <div className="relative rounded-2xl overflow-hidden shadow-soft" style={{ height: '200px' }}>
+                    <img
+                      src={ann[17] ?? ann[3]}
+                      alt="GaDangme Union gathering"
+                      className="absolute inset-0 w-full h-full object-cover object-top"
+                    />
+                    {/* Founded badge on this photo */}
+                    <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-4 py-2.5 rounded-lg shadow-soft">
+                      <p className="font-body text-[9px] text-muted-foreground uppercase tracking-[0.2em]">Founded</p>
+                      <p className="font-heading text-lg font-bold text-foreground leading-none mt-0.5">2012</p>
+                    </div>
+                  </div>
+                </div>
 
-              {/* Floating badge — founded */}
-              <div className="absolute top-8 -right-1 bg-card border border-border/80 px-5 py-3.5 rounded-xl shadow-soft">
-                <p className="font-body text-[10px] text-muted-foreground uppercase tracking-[0.2em]">Founded</p>
-                <p className="font-heading text-xl font-bold text-foreground leading-none mt-0.5">2012</p>
               </div>
             </motion.div>
 
@@ -374,9 +391,84 @@ const Index = () => {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════
-          3 · PHOTO STRIP — labeled Embla slider
+          3 · VIDEO HIGHLIGHTS — dedicated video player section
       ════════════════════════════════════════════════════════════════════════ */}
-      <section className="py-16 md:py-20 bg-heritage-warm">
+      {heroVideo && (
+        <section className="py-16 md:py-20 bg-heritage-warm">
+          <div className="heritage-container">
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.65 }}
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <span className="amber-rule" />
+                <span className="section-eyebrow">Watch &amp; Celebrate</span>
+              </div>
+              <h2
+                className="font-heading font-semibold text-foreground mb-8"
+                style={{ fontSize: 'clamp(1.7rem, 3.2vw, 2.5rem)', letterSpacing: '-0.015em' }}
+              >
+                5th Anniversary Highlights
+              </h2>
+
+              {/* Main video player */}
+              <div className="relative rounded-2xl overflow-hidden shadow-elevated bg-[#071a0c]" style={{ aspectRatio: '16/9' }}>
+                {!videoPlaying ? (
+                  <>
+                    <img
+                      src={ann[13]}
+                      alt="Anniversary highlights thumbnail"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-[#071a0c]/45 flex items-center justify-center">
+                      <button
+                        onClick={() => setVideoPlaying(true)}
+                        className="group flex items-center justify-center w-20 h-20 rounded-full bg-secondary hover:bg-secondary/90 shadow-glow transition-all duration-250 hover:scale-105"
+                        aria-label="Play video"
+                      >
+                        <Play className="w-8 h-8 text-secondary-foreground ml-1" fill="currentColor" />
+                      </button>
+                    </div>
+                    <div className="absolute bottom-6 left-6">
+                      <span className="font-body text-xs font-semibold uppercase tracking-widest text-white/70 bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-full">
+                        5th Anniversary · 2017
+                      </span>
+                    </div>
+                  </>
+                ) : (
+                  <video
+                    autoPlay
+                    controls
+                    className="w-full h-full object-cover"
+                  >
+                    <source src={heroVideo} type="video/mp4" />
+                  </video>
+                )}
+              </div>
+
+              {/* Extra video thumbnails if more than 1 video */}
+              {videos.length > 1 && (
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-4">
+                  {videos.slice(1).map((v, i) => (
+                    <div key={i} className="rounded-xl overflow-hidden shadow-soft aspect-video bg-[#071a0c]">
+                      <video controls className="w-full h-full object-cover">
+                        <source src={v} type="video/mp4" />
+                      </video>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          </div>
+        </section>
+      )}
+
+      {/* ══════════════════════════════════════════════════════════════════════
+          4 · PHOTO STRIP — labeled Embla slider with dots
+      ════════════════════════════════════════════════════════════════════════ */}
+      <section className="py-16 md:py-20 bg-background">
         <div className="heritage-container">
 
           {/* Header row with inline nav */}
@@ -396,14 +488,14 @@ const Index = () => {
             <div className="flex gap-2.5">
               <button
                 onClick={scrollPrev}
-                aria-label="Previous"
+                aria-label="Previous photo"
                 className="w-11 h-11 rounded-full border-2 border-primary text-primary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors duration-200"
               >
                 <ChevronLeft size={18} />
               </button>
               <button
                 onClick={scrollNext}
-                aria-label="Next"
+                aria-label="Next photo"
                 className="w-11 h-11 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:bg-primary/85 transition-colors duration-200"
               >
                 <ChevronRight size={18} />
@@ -412,38 +504,57 @@ const Index = () => {
           </div>
 
           {/* Embla slider */}
-          <div className="overflow-hidden rounded-2xl" ref={emblaRef}>
-            <div className="flex gap-3">
+          <div className="overflow-hidden" ref={emblaRef}>
+            <div className="flex gap-4">
               {stripPhotos.map((src, i) => (
                 <div
                   key={i}
-                  className="shrink-0 basis-[48%] md:basis-[23.5%] aspect-square rounded-xl overflow-hidden shadow-soft"
+                  className="shrink-0 basis-[88%] sm:basis-[48%] lg:basis-[32%] rounded-2xl overflow-hidden shadow-soft"
+                  style={{ height: '300px' }}
                 >
                   <img
                     src={src}
                     alt="GaDangme Union community moment"
-                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                    className="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-700"
                   />
                 </div>
               ))}
             </div>
           </div>
 
+          {/* Carousel dots */}
+          {scrollSnaps.length > 1 && (
+            <div className="flex justify-center gap-2 mt-6">
+              {scrollSnaps.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => emblaApi?.scrollTo(i)}
+                  aria-label={`Go to slide ${i + 1}`}
+                  className={`rounded-full transition-all duration-300 ${
+                    i === selectedIndex
+                      ? 'w-7 h-2.5 bg-secondary'
+                      : 'w-2.5 h-2.5 bg-primary/25 hover:bg-primary/50'
+                  }`}
+                />
+              ))}
+            </div>
+          )}
+
         </div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════
-          4 · COMMUNITY MOMENTS — fading photo cards
+          5 · COMMUNITY MOMENTS — fading photo cards
       ════════════════════════════════════════════════════════════════════════ */}
-      <section className="py-28 md:py-36 bg-background">
+      <section className="py-24 md:py-32 bg-heritage-warm">
         <div className="heritage-container">
 
           <motion.div
-            initial={{ opacity: 0, y: 22 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.65 }}
-            className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14"
+            transition={{ duration: 0.6 }}
+            className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12"
           >
             <div>
               <div className="flex items-center gap-3 mb-4">
@@ -478,39 +589,37 @@ const Index = () => {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════
-          5 · PHOTO BANNER — full-width community CTA
+          6 · PHOTO BANNER — full-width community CTA
       ════════════════════════════════════════════════════════════════════════ */}
-      <section className="relative overflow-hidden" style={{ minHeight: '480px' }}>
+      <section className="relative overflow-hidden" style={{ minHeight: '460px' }}>
         <img
           src={ann[28] ?? ann[33] ?? ann[17]}
           alt="GaDangme Union community gathering"
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover object-top"
         />
-        {/* Deep overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/92 via-primary/82 to-[#061a1a]/95" />
-        {/* Subtle amber stripe at top */}
-        <div className="absolute top-0 left-0 right-0 h-0.5 bg-secondary/50" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/90 via-primary/80 to-[#071a0c]/94" />
+        <div className="absolute top-0 left-0 right-0 h-0.5 bg-secondary/40" />
 
         <motion.div
-          initial={{ opacity: 0, y: 28 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.75 }}
-          className="relative heritage-container py-32 text-center"
+          transition={{ duration: 0.7 }}
+          className="relative heritage-container py-28 text-center"
         >
-          <div className="flex justify-center mb-6">
+          <div className="flex justify-center mb-5">
             <span className="section-eyebrow text-secondary/80">The Netherlands · Est. 2012</span>
           </div>
 
           <h2
             className="font-heading font-semibold text-white mx-auto mb-6"
-            style={{ fontSize: 'clamp(2.4rem, 6vw, 4.5rem)', lineHeight: '1.05', letterSpacing: '-0.02em', maxWidth: '720px' }}
+            style={{ fontSize: 'clamp(2.4rem, 6vw, 4.5rem)', lineHeight: '1.06', letterSpacing: '-0.02em', maxWidth: '720px' }}
           >
             Be Part of Our<br />
             <em className="not-italic text-secondary">Community</em>
           </h2>
 
-          <p className="font-body text-white/65 text-[1.05rem] max-w-lg mx-auto mb-11 leading-[1.8]">
+          <p className="font-body text-white/65 text-[1rem] max-w-lg mx-auto mb-10 leading-[1.85]">
             Whether you are of GaDangme descent or a speaker of the Ga or Dangme
             language, there is a place for you here.
           </p>
@@ -531,21 +640,21 @@ const Index = () => {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════
-          6 · FINAL CTA — card with amber left-border accent
+          7 · FINAL CTA — card with amber left-border accent
       ════════════════════════════════════════════════════════════════════════ */}
-      <section className="py-20 md:py-24 bg-heritage-warm">
+      <section className="py-16 md:py-20 bg-background">
         <motion.div
-          initial={{ opacity: 0, y: 18 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
           className="heritage-container"
         >
-          <div className="relative bg-card rounded-3xl border border-border/70 shadow-elevated overflow-hidden">
+          <div className="relative bg-card rounded-3xl border border-border/60 shadow-elevated overflow-hidden">
             {/* Amber left accent */}
             <div className="absolute top-0 left-0 bottom-0 w-1 bg-secondary rounded-l-3xl" />
 
-            <div className="px-10 py-14 md:px-16 md:py-16 flex flex-col md:flex-row md:items-center md:justify-between gap-10 pl-12 md:pl-20">
+            <div className="px-10 py-12 md:px-16 md:py-14 flex flex-col md:flex-row md:items-center md:justify-between gap-10 pl-12 md:pl-20">
               <div className="max-w-xl">
                 <div className="flex items-center gap-3 mb-4">
                   <span className="amber-rule" />
@@ -557,7 +666,7 @@ const Index = () => {
                 >
                   Have Questions or<br />Want to Join?
                 </h2>
-                <p className="font-body text-muted-foreground text-[15px] leading-[1.8]">
+                <p className="font-body text-muted-foreground text-[15px] leading-[1.82]">
                   We welcome new members and friends of the GaDangme community. Reach out
                   and we will be happy to hear from you.
                 </p>

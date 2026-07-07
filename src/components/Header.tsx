@@ -28,24 +28,21 @@ const Header = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-400 ${
         isScrolled
-          ? 'bg-primary/[0.97] backdrop-blur-xl shadow-elevated py-0'
-          : 'bg-gradient-to-b from-[#061a1a]/70 to-transparent py-1'
+          ? 'bg-primary/[0.97] backdrop-blur-xl shadow-elevated'
+          : 'bg-gradient-to-b from-[#071a0c]/65 to-transparent'
       }`}
     >
-      <nav className="heritage-container">
-        <div className="flex items-center justify-between h-16 md:h-[72px]">
+      {/* Full-width nav — logo pins to viewport left edge */}
+      <div className="px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center h-16 md:h-[72px]">
 
-          {/* ── Logo / Wordmark ──────────────────────────────────── */}
-          <Link to="/" className="flex items-center gap-3.5 group" aria-label="GaDangme Union home">
+          {/* ── Logo / Wordmark — top-left ───────────────────── */}
+          <Link to="/" className="flex items-center gap-3 group flex-shrink-0" aria-label="GaDangme Union home">
             {/* Monogram emblem */}
-            <div className="relative flex-shrink-0">
-              <div className="w-9 h-9 rounded-full border-2 border-secondary flex items-center justify-center transition-all duration-300 group-hover:bg-secondary/15">
-                <span className="font-heading font-bold text-secondary text-base leading-none">G</span>
-              </div>
-              {/* Pulse ring on hover */}
-              <div className="absolute inset-0 rounded-full border border-secondary/30 scale-100 group-hover:scale-150 group-hover:opacity-0 transition-all duration-500" />
+            <div className="w-9 h-9 rounded-full border-2 border-secondary flex items-center justify-center transition-colors duration-250 group-hover:bg-secondary/20">
+              <span className="font-heading font-bold text-secondary text-base leading-none">G</span>
             </div>
 
             {/* Text wordmark */}
@@ -59,8 +56,8 @@ const Header = () => {
             </div>
           </Link>
 
-          {/* ── Desktop nav ──────────────────────────────────────── */}
-          <div className="hidden md:flex items-center gap-0.5">
+          {/* ── Desktop nav — right side ─────────────────────── */}
+          <div className="hidden md:flex items-center gap-0.5 ml-auto">
             {navLinks.map((link) => {
               const isActive = location.pathname === link.path;
               const isContact = link.path === '/contact';
@@ -79,7 +76,6 @@ const Header = () => {
                   }`}
                 >
                   {link.name}
-                  {/* Active underline for non-contact links */}
                   {isActive && !isContact && (
                     <motion.span
                       layoutId="nav-underline"
@@ -91,50 +87,44 @@ const Header = () => {
             })}
           </div>
 
-          {/* ── Mobile menu toggle ───────────────────────────────── */}
+          {/* ── Mobile menu toggle ───────────────────────────── */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 text-white rounded-md hover:bg-white/10 transition-colors"
+            className="md:hidden ml-auto p-2 text-white rounded-md hover:bg-white/10 transition-colors"
             aria-label="Toggle menu"
           >
             {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
-      </nav>
+      </div>
 
-      {/* ── Mobile menu panel ───────────────────────────────────────── */}
+      {/* ── Mobile menu panel ───────────────────────────────── */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            transition={{ duration: 0.28, ease: 'easeInOut' }}
             className="md:hidden bg-primary/[0.97] backdrop-blur-xl border-t border-white/8"
           >
-            <div className="heritage-container py-5">
+            <div className="px-4 sm:px-6 py-5">
               <div className="flex flex-col gap-0.5">
-                {navLinks.map((link, index) => (
-                  <motion.div
+                {navLinks.map((link) => (
+                  <Link
                     key={link.path}
-                    initial={{ opacity: 0, x: -16 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.07 }}
+                    to={link.path}
+                    className={`flex items-center py-3 px-4 rounded-lg font-body text-[15px] font-semibold transition-all duration-200 ${
+                      location.pathname === link.path
+                        ? 'text-secondary bg-secondary/12'
+                        : 'text-white/75 hover:text-white hover:bg-white/5'
+                    }`}
                   >
-                    <Link
-                      to={link.path}
-                      className={`flex items-center py-3 px-4 rounded-lg font-body text-[15px] font-semibold transition-all duration-200 ${
-                        location.pathname === link.path
-                          ? 'text-secondary bg-secondary/12'
-                          : 'text-white/75 hover:text-white hover:bg-white/5'
-                      }`}
-                    >
-                      {location.pathname === link.path && (
-                        <span className="w-1.5 h-1.5 rounded-full bg-secondary mr-3 flex-shrink-0" />
-                      )}
-                      {link.name}
-                    </Link>
-                  </motion.div>
+                    {location.pathname === link.path && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-secondary mr-3 flex-shrink-0" />
+                    )}
+                    {link.name}
+                  </Link>
                 ))}
               </div>
             </div>
