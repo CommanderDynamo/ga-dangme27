@@ -16,9 +16,9 @@ dist-ssr
 .env
 .env.*
 
-# Media assets are too large for GitHub (4.5 GB / 1097 files)
-# Host them on a CDN or deploy the built dist/ folder instead
-src/assets/
+# Video files are too large for GitHub — host on a CDN
+*.mp4
+*.MP4
 
 # Claude Code session data
 .claude
