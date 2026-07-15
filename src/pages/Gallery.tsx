@@ -108,6 +108,124 @@ const _ab3ibeeMods = import.meta.glob(
 ) as Record<string, string>;
 const ab3ibeeImages = Object.keys(_ab3ibeeMods).sort().map(k => _ab3ibeeMods[k]);
 
+
+// New event albums
+const _alemleBiiMods = import.meta.glob(
+  '../assets/ALEMLE BII(NOVEMBER) 2018/*.jpg',
+  { eager: true, query: '?url', import: 'default' }
+) as Record<string, string>;
+const alemleBiiImages = Object.keys(_alemleBiiMods).sort().map(k => _alemleBiiMods[k]);
+
+const _susanOyooMods = import.meta.glob(
+  '../assets/AT BURIALFINAL FUNERAL RITES OF OUR DEAR MRS SUSAN OYOO BOYE-QUARTEY/*.jpg',
+  { eager: true, query: '?url', import: 'default' }
+) as Record<string, string>;
+const susanOyooImages = Object.keys(_susanOyooMods).sort().map(k => _susanOyooMods[k]);
+
+const _edmundMensahMods = import.meta.glob(
+  '../assets/AT ELDER EDMUND MENSAH’S RETIREMENT SERVICE AT COP AMSTERDAM 30TH SEPTEMBER 2018/*.jpg',
+  { eager: true, query: '?url', import: 'default' }
+) as Record<string, string>;
+const edmundMensahImages = Object.keys(_edmundMensahMods).sort().map(k => _edmundMensahMods[k]);
+
+const _nyemimeiAkpeeMods = import.meta.glob(
+  '../assets/CELEBRATEATE WITH NY3MIM3I AKPEE GADANGME EUROPE-SAT.6TH OCTOBER 2018/*.jpg',
+  { eager: true, query: '?url', import: 'default' }
+) as Record<string, string>;
+const nyemimeiAkpeeImages = Object.keys(_nyemimeiAkpeeMods).sort().map(k => _nyemimeiAkpeeMods[k]);
+
+const _stephenQuayeMods = import.meta.glob(
+  '../assets/CELEBRATED THE BIRTHDAY OF ONE OF THE FINESTRESPECTED ELDERS (MR STEPHEN KLOTEI QUAYE)/*.jpg',
+  { eager: true, query: '?url', import: 'default' }
+) as Record<string, string>;
+const stephenQuayeImages = Object.keys(_stephenQuayeMods).sort().map(k => _stephenQuayeMods[k]);
+
+const _daaviComfortMods = import.meta.glob(
+  '../assets/DAAVI COMFORT’S MUM FUNERAL/*.jpg',
+  { eager: true, query: '?url', import: 'default' }
+) as Record<string, string>;
+const daaviComfortImages = Object.keys(_daaviComfortMods).sort().map(k => _daaviComfortMods[k]);
+
+const _florenceNorteyMods = import.meta.glob(
+  '../assets/FLORENCE NORTEY’S CHILD DEDICATION/*.jpg',
+  { eager: true, query: '?url', import: 'default' }
+) as Record<string, string>;
+const florenceNorteyImages = Object.keys(_florenceNorteyMods).sort().map(k => _florenceNorteyMods[k]);
+
+const _ericVanEsMods = import.meta.glob(
+  '../assets/JOINED BROTHER ERIC VAN ES TO MOURN THE PASSING TO GLORY OF THE LATE MOTHER, 2018/*.jpg',
+  { eager: true, query: '?url', import: 'default' }
+) as Record<string, string>;
+const ericVanEsImages = Object.keys(_ericVanEsMods).sort().map(k => _ericVanEsMods[k]);
+
+const _paulNeequayeMods = import.meta.glob(
+  '../assets/MR PAUL ASHIE NEEQUAYE’S BIRTHDAY CELEBRATION/*.jpg',
+  { eager: true, query: '?url', import: 'default' }
+) as Record<string, string>;
+const paulNeequayeImages = Object.keys(_paulNeequayeMods).sort().map(k => _paulNeequayeMods[k]);
+
+const _niiAmsterdamMods = import.meta.glob(
+  '../assets/NII AMSTERDAM’S CHILD DEDICATION JUNE 2018/*.jpg',
+  { eager: true, query: '?url', import: 'default' }
+) as Record<string, string>;
+const niiAmsterdamImages = Object.keys(_niiAmsterdamMods).sort().map(k => _niiAmsterdamMods[k]);
+
+const _ortegaWeddingMods = import.meta.glob(
+  '../assets/ORTEGA’S WEDDING/*.jpg',
+  { eager: true, query: '?url', import: 'default' }
+) as Record<string, string>;
+const _ortegaWeddingGifMods = import.meta.glob(
+  '../assets/ORTEGA’S WEDDING/*.gif',
+  { eager: true, query: '?url', import: 'default' }
+) as Record<string, string>;
+const ortegaWeddingImages = [...Object.keys(_ortegaWeddingMods).sort().map(k => _ortegaWeddingMods[k]), ...Object.keys(_ortegaWeddingGifMods).sort().map(k => _ortegaWeddingGifMods[k])];
+
+const _otsokrikriMods = import.meta.glob(
+  '../assets/OTSOKRIKRI THE GREAT/*.jpg',
+  { eager: true, query: '?url', import: 'default' }
+) as Record<string, string>;
+const _otsokrikriGifMods = import.meta.glob(
+  '../assets/OTSOKRIKRI THE GREAT/*.gif',
+  { eager: true, query: '?url', import: 'default' }
+) as Record<string, string>;
+const otsokrikriImages = [...Object.keys(_otsokrikriMods).sort().map(k => _otsokrikriMods[k]), ...Object.keys(_otsokrikriGifMods).sort().map(k => _otsokrikriGifMods[k])];
+
+const _philly2014Mods = import.meta.glob(
+  '../assets/PHILADEPHIA 2014/*.jpg',
+  { eager: true, query: '?url', import: 'default' }
+) as Record<string, string>;
+const philly2014Images = Object.keys(_philly2014Mods).sort().map(k => _philly2014Mods[k]);
+
+const _thanksgivingServiceMods = import.meta.glob(
+  '../assets/THANKSGIVING SERVICE/*.jpg',
+  { eager: true, query: '?url', import: 'default' }
+) as Record<string, string>;
+const thanksgivingServiceImages = Object.keys(_thanksgivingServiceMods).sort().map(k => _thanksgivingServiceMods[k]);
+
+const _rebeccaGidimadjorMods = import.meta.glob(
+  '../assets/THANKSGIVING SERVICE- MAMA REBECCA GIDIMADJOR’S LATE MUM/*.jpg',
+  { eager: true, query: '?url', import: 'default' }
+) as Record<string, string>;
+const rebeccaGidimadjorImages = Object.keys(_rebeccaGidimadjorMods).sort().map(k => _rebeccaGidimadjorMods[k]);
+
+const _niiBaahMotherMods = import.meta.glob(
+  '../assets/THE LATE NII BAAH’S LATE MOTHER’S THANKSGIVING SERVICE/*.jpg',
+  { eager: true, query: '?url', import: 'default' }
+) as Record<string, string>;
+const niiBaahMotherImages = Object.keys(_niiBaahMotherMods).sort().map(k => _niiBaahMotherMods[k]);
+
+const _philanthropistVisitMods = import.meta.glob(
+  '../assets/VISITATION TO A PHILANTHROPIST/*.jpeg',
+  { eager: true, query: '?url', import: 'default' }
+) as Record<string, string>;
+const philanthropistVisitImages = Object.keys(_philanthropistVisitMods).sort().map(k => _philanthropistVisitMods[k]);
+
+const _fredRomeoSonMods = import.meta.glob(
+  '../assets/funeral rites bro Fred Romeo\'s Late son/*.jpeg',
+  { eager: true, query: '?url', import: 'default' }
+) as Record<string, string>;
+const fredRomeoSonImages = Object.keys(_fredRomeoSonMods).sort().map(k => _fredRomeoSonMods[k]);
+
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
 export interface GalleryImage {
@@ -263,6 +381,133 @@ const albums: Album[] = [
     subtitle: 'GaDangme Union Netherlands',
     coverImage: ab3ibeeImages[0] ?? '',
     images: dedup(toImgs(ab3ibeeImages, 'Ab3ibee Bii N3!')),
+  },
+
+  {
+    id: 'alemle-bii-nov-2018',
+    title: 'Alemle Bii',
+    subtitle: 'GaDangme Union Netherlands · November 2018',
+    coverImage: alemleBiiImages[0] ?? '',
+    images: dedup(toImgs(alemleBiiImages, 'Alemle Bii')),
+  },
+  {
+    id: 'susan-oyoo-boye-quartey-funeral',
+    title: 'Funeral Rites of Mrs Susan Oyoo Boye-Quartey',
+    subtitle: 'GaDangme Union Netherlands',
+    coverImage: susanOyooImages[0] ?? '',
+    images: dedup(toImgs(susanOyooImages, 'Funeral Rites of Mrs Susan Oyoo Boye-Quartey')),
+  },
+  {
+    id: 'edmund-mensah-retirement-2018',
+    title: 'Elder Edmund Mensah’s Retirement Service',
+    subtitle: 'COP Amsterdam · 30 September 2018',
+    coverImage: edmundMensahImages[0] ?? '',
+    images: dedup(toImgs(edmundMensahImages, 'Elder Edmund Mensah’s Retirement Service')),
+  },
+  {
+    id: 'nyemimei-akpee-europe-2018',
+    title: 'Celebrating with Ny3mim3i Akpee',
+    subtitle: 'GaDangme Europe · 6 October 2018',
+    coverImage: nyemimeiAkpeeImages[0] ?? '',
+    images: dedup(toImgs(nyemimeiAkpeeImages, 'Celebrating with Ny3mim3i Akpee')),
+  },
+  {
+    id: 'stephen-klotei-quaye-birthday',
+    title: 'Birthday Celebration — Mr Stephen Klotei Quaye',
+    subtitle: 'GaDangme Union Netherlands',
+    coverImage: stephenQuayeImages[0] ?? '',
+    images: dedup(toImgs(stephenQuayeImages, 'Birthday Celebration — Mr Stephen Klotei Quaye')),
+  },
+  {
+    id: 'daavi-comfort-mum-funeral',
+    title: 'Daavi Comfort’s Mum — Funeral',
+    subtitle: 'GaDangme Union Netherlands',
+    coverImage: daaviComfortImages[0] ?? '',
+    images: dedup(toImgs(daaviComfortImages, 'Daavi Comfort’s Mum — Funeral')),
+  },
+  {
+    id: 'florence-nortey-child-dedication',
+    title: 'Florence Nortey’s Child Dedication',
+    subtitle: 'GaDangme Union Netherlands',
+    coverImage: florenceNorteyImages[0] ?? '',
+    images: dedup(toImgs(florenceNorteyImages, 'Florence Nortey’s Child Dedication')),
+  },
+  {
+    id: 'eric-van-es-late-mother-2018',
+    title: 'Mourning with Brother Eric van Es',
+    subtitle: 'In memory of his late mother · 2018',
+    coverImage: ericVanEsImages[0] ?? '',
+    images: dedup(toImgs(ericVanEsImages, 'Mourning with Brother Eric van Es')),
+  },
+  {
+    id: 'paul-ashie-neequaye-birthday',
+    title: 'Mr Paul Ashie Neequaye’s Birthday Celebration',
+    subtitle: 'GaDangme Union Netherlands',
+    coverImage: paulNeequayeImages[0] ?? '',
+    images: dedup(toImgs(paulNeequayeImages, 'Mr Paul Ashie Neequaye’s Birthday Celebration')),
+  },
+  {
+    id: 'nii-amsterdam-child-dedication-2018',
+    title: 'Nii Amsterdam’s Child Dedication',
+    subtitle: 'June 2018',
+    coverImage: niiAmsterdamImages[0] ?? '',
+    images: dedup(toImgs(niiAmsterdamImages, 'Nii Amsterdam’s Child Dedication')),
+  },
+  {
+    id: 'ortegas-wedding',
+    title: 'Ortega’s Wedding',
+    subtitle: 'GaDangme Union Netherlands',
+    coverImage: ortegaWeddingImages[0] ?? '',
+    images: dedup(toImgs(ortegaWeddingImages, 'Ortega’s Wedding')),
+  },
+  {
+    id: 'otsokrikri-the-great',
+    title: 'Otsokrikri the Great',
+    subtitle: 'GaDangme Union Netherlands',
+    coverImage: otsokrikriImages[0] ?? '',
+    images: dedup(toImgs(otsokrikriImages, 'Otsokrikri the Great')),
+  },
+  {
+    id: 'philadelphia-2014',
+    title: 'Philadelphia 2014',
+    subtitle: 'GaDangme Union Netherlands · 2014',
+    coverImage: philly2014Images[0] ?? '',
+    images: dedup(toImgs(philly2014Images, 'Philadelphia 2014')),
+  },
+  {
+    id: 'thanksgiving-service',
+    title: 'Thanksgiving Service',
+    subtitle: 'GaDangme Union Netherlands',
+    coverImage: thanksgivingServiceImages[0] ?? '',
+    images: dedup(toImgs(thanksgivingServiceImages, 'Thanksgiving Service')),
+  },
+  {
+    id: 'rebecca-gidimadjor-late-mum-thanksgiving',
+    title: 'Thanksgiving Service — Mama Rebecca Gidimadjor’s Late Mum',
+    subtitle: 'GaDangme Union Netherlands',
+    coverImage: rebeccaGidimadjorImages[0] ?? '',
+    images: dedup(toImgs(rebeccaGidimadjorImages, 'Thanksgiving Service — Mama Rebecca Gidimadjor’s Late Mum')),
+  },
+  {
+    id: 'nii-baah-late-mother-thanksgiving',
+    title: 'Thanksgiving Service — Nii Baah’s Late Mother',
+    subtitle: 'GaDangme Union Netherlands',
+    coverImage: niiBaahMotherImages[0] ?? '',
+    images: dedup(toImgs(niiBaahMotherImages, 'Thanksgiving Service — Nii Baah’s Late Mother')),
+  },
+  {
+    id: 'visitation-to-a-philanthropist',
+    title: 'Visitation to a Philanthropist',
+    subtitle: 'GaDangme Union Netherlands',
+    coverImage: philanthropistVisitImages[0] ?? '',
+    images: dedup(toImgs(philanthropistVisitImages, 'Visitation to a Philanthropist')),
+  },
+  {
+    id: 'fred-romeo-late-son-funeral',
+    title: 'Funeral Rites — Bro Fred Romeo’s Late Son',
+    subtitle: 'GaDangme Union Netherlands',
+    coverImage: fredRomeoSonImages[0] ?? '',
+    images: dedup(toImgs(fredRomeoSonImages, 'Funeral Rites — Bro Fred Romeo’s Late Son')),
   },
 ];
 

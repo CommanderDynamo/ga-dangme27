@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Mail, MapPin, Phone, Send, Clock } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Layout from '@/components/Layout';
+import contactBanner from '../assets/Contact banner.jpg';
 
 const CONTACT_EMAIL = 'pnyanyo@gmail.com';
 
@@ -64,12 +65,18 @@ const Contact = () => {
 
   return (
     <Layout>
-      {/* Hero */}
-      <section className="relative pt-28 pb-20 md:pt-36 md:pb-28 bg-primary overflow-hidden">
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-20 right-20 w-72 h-72 rounded-full border border-primary-foreground" />
+      {/* Hero: full-bleed photo banner */}
+      <section className="relative min-h-[55vh] flex items-end overflow-hidden">
+        <div className="absolute inset-0">
+          <img
+            src={contactBanner}
+            alt="GaDangme Union members with the 2018 union calendar"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-heritage-dark/95 via-heritage-dark/50 to-primary/30" />
         </div>
-        <div className="heritage-container relative">
+
+        <div className="relative heritage-container pb-16 md:pb-20 pt-32">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
