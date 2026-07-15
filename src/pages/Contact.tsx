@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, MapPin, Phone, Send, Clock } from 'lucide-react';
-import emailjs from '@emailjs/browser';
 import { useToast } from '@/hooks/use-toast';
 import Layout from '@/components/Layout';
+
+const CONTACT_EMAIL = 'pnyanyo@gmail.com';
 
 const contactInfo = [
   {
@@ -31,7 +32,6 @@ const contactInfo = [
 
 const Contact = () => {
   const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -44,36 +44,22 @@ const Contact = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
 
-    try {
-      await emailjs.send(
-        import.meta.env.VITE_EMAILJS_SERVICE_ID,
-        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-        {
-          from_name: formData.name,
-          reply_to: formData.email,
-          subject: formData.subject,
-          message: formData.message,
-        },
-        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
-      );
-      toast({
-        title: 'Message Sent!',
-        description: 'Thank you for contacting us. We will get back to you soon.',
-      });
-      setFormData({ name: '', email: '', subject: '', message: '' });
-    } catch {
-      toast({
-        title: 'Failed to send message',
-        description: 'Please try again or email us directly at pnyanyo@gmail.com',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
+    const subject = formData.subject || `Message from ${formData.name}`;
+    const body = `${formData.message}\n\n— ${formData.name} (${formData.email})`;
+    const gmailComposeUrl =
+      `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(CONTACT_EMAIL)}` +
+      `&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+    window.open(gmailComposeUrl, '_blank', 'noopener,noreferrer');
+
+    toast({
+      title: 'Opening Gmail…',
+      description: 'A prefilled message has opened in a new tab — just hit send.',
+    });
+    setFormData({ name: '', email: '', subject: '', message: '' });
   };
 
   return (
@@ -218,21 +204,11 @@ const Contact = () => {
                     />
                   </div>
 
-                  <button
-                    type="submit" disabled={isSubmitting}
-                    className="w-full btn-heritage disabled:opacity-50 disabled:cursor-not-allowed text-base"
-                  >
-                    {isSubmitting ? (
-                      <span className="flex items-center justify-center gap-2">
-                        <span className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-                        Sending...
-                      </span>
-                    ) : (
-                      <span className="flex items-center justify-center gap-2">
-                        <Send className="w-4 h-4" />
-                        Send Message
-                      </span>
-                    )}
+                  <button type="submit" className="w-full btn-heritage text-base">
+                    <span className="flex items-center justify-center gap-2">
+                      <Send className="w-4 h-4" />
+                      Send Message
+                    </span>
                   </button>
                 </form>
               </div>
