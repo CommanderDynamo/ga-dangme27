@@ -4,7 +4,7 @@ import { Mail } from 'lucide-react';
 const socialLinks = [
   {
     label: 'Facebook',
-    href: '#',
+    href: 'https://www.facebook.com/share/p/18sfqx44dD/?mibextid=wwXIfr',
     icon: (
       <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
         <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
@@ -68,6 +68,8 @@ const Footer = () => {
                 <a
                   key={label}
                   href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={label}
                   className="w-9 h-9 rounded-full bg-white/10 border border-white/10 flex items-center justify-center hover:bg-secondary hover:border-secondary hover:text-secondary-foreground transition-all duration-200"
                 >
