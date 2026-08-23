@@ -3,9 +3,17 @@ import { motion } from 'framer-motion';
 import { Mail, MapPin, Phone, Send, Clock } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Layout from '@/components/Layout';
+import { usePageMeta } from '@/hooks/use-page-meta';
 import contactBanner from '../assets/Contact banner.jpg';
 
 const CONTACT_EMAIL = 'pnyanyo@gmail.com';
+const WHATSAPP_NUMBER = '31620336237'; // +31 6 20336237, in wa.me format (no + or spaces)
+
+const WhatsAppIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" className={className}>
+    <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.29-1.39c1.45.79 3.08 1.21 4.75 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2zm5.85 14.11c-.25.7-1.25 1.29-2.03 1.45-.54.12-1.25.21-3.63-.78-3.05-1.26-5.01-4.36-5.16-4.56-.15-.2-1.23-1.64-1.23-3.13s.77-2.22 1.05-2.52c.25-.28.55-.35.73-.35h.53c.17 0 .4-.03.62.48.25.6.85 2.08.92 2.23.07.15.12.33.02.53-.09.2-.14.33-.28.5-.14.17-.29.39-.42.52-.14.14-.28.29-.13.57.15.28.68 1.13 1.47 1.84 1.01.91 1.87 1.19 2.15 1.32.28.14.44.12.6-.07.17-.19.72-.83.91-1.11.19-.28.38-.24.63-.14.26.09 1.64.78 1.92.92.28.14.46.21.53.33.07.12.07.68-.18 1.38z" />
+  </svg>
+);
 
 const contactInfo = [
   {
@@ -32,6 +40,11 @@ const contactInfo = [
 ];
 
 const Contact = () => {
+  usePageMeta({
+    title: 'Contact Us',
+    description: "Have questions about the GaDangme Union or want to get involved? We'd love to hear from you.",
+  });
+
   const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: '',
@@ -59,6 +72,31 @@ const Contact = () => {
     toast({
       title: 'Opening Gmail…',
       description: 'A prefilled message has opened in a new tab — just hit send.',
+    });
+    setFormData({ name: '', email: '', subject: '', message: '' });
+  };
+
+  const handleWhatsApp = () => {
+    if (!formData.name || !formData.email || !formData.message) {
+      toast({
+        title: 'A few details are missing',
+        description: 'Please fill in your name, email, and message before sending via WhatsApp.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    const subject = formData.subject || `Message from ${formData.name}`;
+    const text =
+      `New message from ${formData.name} (${formData.email})\n` +
+      `Subject: ${subject}\n\n${formData.message}`;
+    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
+
+    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+
+    toast({
+      title: 'Opening WhatsApp…',
+      description: 'Your message is pre-filled — just hit send in WhatsApp.',
     });
     setFormData({ name: '', email: '', subject: '', message: '' });
   };
@@ -118,7 +156,7 @@ const Contact = () => {
                       <item.icon className="w-5 h-5 text-primary" />
                     </div>
                     <div>
-                      <h3 className="font-heading text-base font-semibold text-foreground mb-0.5">
+                      <h3 className="font-subheading text-base font-semibold text-foreground mb-0.5">
                         {item.title}
                       </h3>
                       {item.link ? (
@@ -135,7 +173,7 @@ const Contact = () => {
 
               {/* About Box */}
               <div className="mt-10 p-6 bg-heritage-warm rounded-2xl border border-border">
-                <h3 className="font-heading text-lg font-semibold text-foreground mb-3">
+                <h3 className="font-subheading text-lg font-semibold text-foreground mb-3">
                   About GaDangme Union
                 </h3>
                 <p className="font-body text-sm text-muted-foreground leading-relaxed mb-4">
@@ -143,7 +181,7 @@ const Contact = () => {
                   unites and supports the GaDangme community in the diaspora through
                   cultural events, community engagement, and heritage preservation.
                 </p>
-                <p className="font-heading text-sm italic text-primary">
+                <p className="font-subheading text-sm italic text-primary">
                   "Ashiii Gɔnti sɛɛ aŋmɔɔ kpɔ"
                 </p>
               </div>
@@ -211,12 +249,24 @@ const Contact = () => {
                     />
                   </div>
 
-                  <button type="submit" className="w-full btn-heritage text-base">
-                    <span className="flex items-center justify-center gap-2">
-                      <Send className="w-4 h-4" />
-                      Send Message
-                    </span>
-                  </button>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <button type="submit" className="btn-heritage text-base">
+                      <span className="flex items-center justify-center gap-2">
+                        <Send className="w-4 h-4" />
+                        Send via Email
+                      </span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleWhatsApp}
+                      className="text-base inline-flex items-center justify-center px-7 py-3.5 rounded-lg bg-[#25D366] text-white font-body font-semibold tracking-wide transition-all duration-300 ease-out hover:bg-[#1fbd5a] hover:shadow-elevated hover:-translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2"
+                    >
+                      <span className="flex items-center justify-center gap-2">
+                        <WhatsAppIcon />
+                        Send via WhatsApp
+                      </span>
+                    </button>
+                  </div>
                 </form>
               </div>
             </motion.div>

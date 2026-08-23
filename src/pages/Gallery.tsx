@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Camera, FolderOpen, ChevronRight, ArrowLeft, Play } from 'lucide-react';
 import Layout from '@/components/Layout';
 import Lightbox from '@/components/Lightbox';
+import { usePageMeta } from '@/hooks/use-page-meta';
 
 
 
@@ -26,14 +27,23 @@ const _ann5Lower = import.meta.glob(
   '../assets/5TH ANNIVERSARY/*.jpg',
   { eager: true, query: '?url', import: 'default' }
 ) as Record<string, string>;
-const _ann5VideoMods = import.meta.glob(
+const _ann5Gif = import.meta.glob(
+  '../assets/5TH ANNIVERSARY/*.gif',
+  { eager: true, query: '?url', import: 'default' }
+) as Record<string, string>;
+const _ann5VideoUpper = import.meta.glob(
   '../assets/5TH ANNIVERSARY/*.MP4',
   { eager: true, query: '?url', import: 'default' }
 ) as Record<string, string>;
-const _ann5All = { ..._ann5Upper, ..._ann5Lower };
+const _ann5VideoLower = import.meta.glob(
+  '../assets/5TH ANNIVERSARY/*.mp4',
+  { eager: true, query: '?url', import: 'default' }
+) as Record<string, string>;
+const _ann5All = { ..._ann5Upper, ..._ann5Lower, ..._ann5Gif };
+const _ann5VideoAll = { ..._ann5VideoUpper, ..._ann5VideoLower };
 
 const ann5Images = [...new Set(Object.keys(_ann5All).sort().map(k => _ann5All[k]))];
-const ann5Videos = Object.keys(_ann5VideoMods).sort().map(k => _ann5VideoMods[k]);
+const ann5Videos = [...new Set(Object.keys(_ann5VideoAll).sort().map(k => _ann5VideoAll[k]))];
 
 // 2012 BBQ
 const _bbq2012Mods = import.meta.glob(
@@ -111,7 +121,7 @@ const ab3ibeeImages = Object.keys(_ab3ibeeMods).sort().map(k => _ab3ibeeMods[k])
 
 // New event albums
 const _alemleBiiMods = import.meta.glob(
-  '../assets/ALEMLE BII(NOVEMBER) 2018/*.jpg',
+  '../assets/ALEMLE BII\\(NOVEMBER\\) 2018/*.jpg',
   { eager: true, query: '?url', import: 'default' }
 ) as Record<string, string>;
 const alemleBiiImages = Object.keys(_alemleBiiMods).sort().map(k => _alemleBiiMods[k]);
@@ -135,7 +145,7 @@ const _nyemimeiAkpeeMods = import.meta.glob(
 const nyemimeiAkpeeImages = Object.keys(_nyemimeiAkpeeMods).sort().map(k => _nyemimeiAkpeeMods[k]);
 
 const _stephenQuayeMods = import.meta.glob(
-  '../assets/CELEBRATED THE BIRTHDAY OF ONE OF THE FINESTRESPECTED ELDERS (MR STEPHEN KLOTEI QUAYE)/*.jpg',
+  '../assets/CELEBRATED THE BIRTHDAY OF ONE OF THE FINESTRESPECTED ELDERS \\(MR STEPHEN KLOTEI QUAYE\\)/*.jpg',
   { eager: true, query: '?url', import: 'default' }
 ) as Record<string, string>;
 const stephenQuayeImages = Object.keys(_stephenQuayeMods).sort().map(k => _stephenQuayeMods[k]);
@@ -156,7 +166,12 @@ const _ericVanEsMods = import.meta.glob(
   '../assets/JOINED BROTHER ERIC VAN ES TO MOURN THE PASSING TO GLORY OF THE LATE MOTHER, 2018/*.jpg',
   { eager: true, query: '?url', import: 'default' }
 ) as Record<string, string>;
+const _ericVanEsVideoMods = import.meta.glob(
+  '../assets/JOINED BROTHER ERIC VAN ES TO MOURN THE PASSING TO GLORY OF THE LATE MOTHER, 2018/*.mp4',
+  { eager: true, query: '?url', import: 'default' }
+) as Record<string, string>;
 const ericVanEsImages = Object.keys(_ericVanEsMods).sort().map(k => _ericVanEsMods[k]);
+const ericVanEsVideos = Object.keys(_ericVanEsVideoMods).sort().map(k => _ericVanEsVideoMods[k]);
 
 const _paulNeequayeMods = import.meta.glob(
   '../assets/MR PAUL ASHIE NEEQUAYE’S BIRTHDAY CELEBRATION/*.jpg',
@@ -196,11 +211,22 @@ const _philly2014Mods = import.meta.glob(
 ) as Record<string, string>;
 const philly2014Images = Object.keys(_philly2014Mods).sort().map(k => _philly2014Mods[k]);
 
+const _philly2018DecMods = import.meta.glob(
+  '../assets/PHILADEPHIA DECEMBER 2018/*.mp4',
+  { eager: true, query: '?url', import: 'default' }
+) as Record<string, string>;
+const philly2018DecVideos = Object.keys(_philly2018DecMods).sort().map(k => _philly2018DecMods[k]);
+
 const _thanksgivingServiceMods = import.meta.glob(
   '../assets/THANKSGIVING SERVICE/*.jpg',
   { eager: true, query: '?url', import: 'default' }
 ) as Record<string, string>;
+const _thanksgivingServiceVideoMods = import.meta.glob(
+  '../assets/THANKSGIVING SERVICE/*.mp4',
+  { eager: true, query: '?url', import: 'default' }
+) as Record<string, string>;
 const thanksgivingServiceImages = Object.keys(_thanksgivingServiceMods).sort().map(k => _thanksgivingServiceMods[k]);
+const thanksgivingServiceVideos = Object.keys(_thanksgivingServiceVideoMods).sort().map(k => _thanksgivingServiceVideoMods[k]);
 
 const _rebeccaGidimadjorMods = import.meta.glob(
   '../assets/THANKSGIVING SERVICE- MAMA REBECCA GIDIMADJOR’S LATE MUM/*.jpg',
@@ -221,7 +247,7 @@ const _philanthropistVisitMods = import.meta.glob(
 const philanthropistVisitImages = Object.keys(_philanthropistVisitMods).sort().map(k => _philanthropistVisitMods[k]);
 
 const _fredRomeoSonMods = import.meta.glob(
-  '../assets/funeral rites bro Fred Romeo\'s Late son/*.jpeg',
+  "../assets/funeral rites bro Fred Romeo's Late son/*.jpeg",
   { eager: true, query: '?url', import: 'default' }
 ) as Record<string, string>;
 const fredRomeoSonImages = Object.keys(_fredRomeoSonMods).sort().map(k => _fredRomeoSonMods[k]);
@@ -234,7 +260,7 @@ export interface GalleryImage {
   type?: 'image' | 'video';
 }
 
-interface Album {
+export interface Album {
   id: string;
   title: string;
   subtitle: string;
@@ -296,7 +322,7 @@ const thanksCaptions = [
   'Final Moments of the 5th Anniversary Thanksgiving',
 ];
 
-const albums: Album[] = [
+export const albums: Album[] = [
   // ── Chronological order ──────────────────────────────────────────────────────
   {
     id: '2012-bbq',
@@ -437,7 +463,10 @@ const albums: Album[] = [
     title: 'Mourning with Brother Eric van Es',
     subtitle: 'In memory of his late mother · 2018',
     coverImage: ericVanEsImages[0] ?? '',
-    images: dedup(toImgs(ericVanEsImages, 'Mourning with Brother Eric van Es')),
+    images: dedup([
+      ...toImgs(ericVanEsImages, 'Mourning with Brother Eric van Es'),
+      ...toVids(ericVanEsVideos, 'Mourning with Brother Eric van Es'),
+    ]),
   },
   {
     id: 'paul-ashie-neequaye-birthday',
@@ -475,11 +504,22 @@ const albums: Album[] = [
     images: dedup(toImgs(philly2014Images, 'Philadelphia 2014')),
   },
   {
+    id: 'philadelphia-december-2018',
+    title: 'Philadelphia Gathering',
+    subtitle: 'GaDangme Union Netherlands · December 2018',
+    coverImage: philly2018DecVideos[0] ?? '',
+    coverType: 'video',
+    images: dedup(toVids(philly2018DecVideos, 'Philadelphia Gathering · December 2018')),
+  },
+  {
     id: 'thanksgiving-service',
     title: 'Thanksgiving Service',
     subtitle: 'GaDangme Union Netherlands',
     coverImage: thanksgivingServiceImages[0] ?? '',
-    images: dedup(toImgs(thanksgivingServiceImages, 'Thanksgiving Service')),
+    images: dedup([
+      ...toImgs(thanksgivingServiceImages, 'Thanksgiving Service'),
+      ...toVids(thanksgivingServiceVideos, 'Thanksgiving Service'),
+    ]),
   },
   {
     id: 'rebecca-gidimadjor-late-mum-thanksgiving',
@@ -514,6 +554,11 @@ const albums: Album[] = [
 // ─── Component ────────────────────────────────────────────────────────────────
 
 const Gallery = () => {
+  usePageMeta({
+    title: 'Gallery',
+    description: 'Browse photo and video albums from GaDangme Union events across the Netherlands.',
+  });
+
   const [activeAlbum, setActiveAlbum] = useState<Album | null>(null);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -646,7 +691,7 @@ const Gallery = () => {
                             </div>
 
                             <div className="absolute bottom-0 left-0 right-0 p-5">
-                              <h3 className="font-heading text-xl text-primary-foreground font-bold mb-1">
+                              <h3 className="font-subheading text-xl text-primary-foreground font-bold mb-1">
                                 {album.title}
                               </h3>
                               <p className="font-body text-sm text-primary-foreground/80">{album.subtitle}</p>
