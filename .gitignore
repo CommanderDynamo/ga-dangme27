@@ -28,6 +28,9 @@ dist-ssr
 !src/assets/PHILADEPHIA DECEMBER 2018/VID-20251107-WA0007.mp4
 !src/assets/PHILADEPHIA DECEMBER 2018/VID-20251107-WA0008.mp4
 !src/assets/PHILADEPHIA DECEMBER 2018/VID-20251107-WA0010.mp4
+# The remaining two exceed GitHub's 100MB limit and are tracked via Git LFS instead (see .gitattributes)
+!src/assets/PHILADEPHIA DECEMBER 2018/VID-20251107-WA0011.mp4
+!src/assets/PHILADEPHIA DECEMBER 2018/WhatsApp Video 2025-11-07 at 00.48.43_a5106602.mp4
 
 # Claude Code session data
 .claude
