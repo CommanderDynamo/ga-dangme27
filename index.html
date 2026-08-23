@@ -20,14 +20,5 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-
-    <!-- Static form so Netlify's build-time bot can detect the Contact form (it doesn't run JS). -->
-    <form name="contact" data-netlify="true" netlify-honeypot="bot-field" hidden>
-      <input type="text" name="name" />
-      <input type="email" name="email" />
-      <input type="text" name="subject" />
-      <textarea name="message"></textarea>
-      <input type="text" name="bot-field" />
-    </form>
   </body>
 </html>
