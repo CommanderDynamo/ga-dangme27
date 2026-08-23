@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { Play, Pause, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Layout from '@/components/Layout';
+import { usePageMeta } from '@/hooks/use-page-meta';
 
 // ─── Asset loading ─────────────────────────────────────────────────────────────
 
@@ -19,8 +20,13 @@ const _bbq15Videos  = import.meta.glob('../assets/2015 BABBEQUE/*.mp4', { eager:
 const _daantaa16    = import.meta.glob('../assets/2016 DAANTAA/*.jpg',      { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
 const _phila16      = import.meta.glob('../assets/2016 PHILADEPHIA/*.jpg',   { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
 
-const _ann17Photos  = import.meta.glob('../assets/5TH ANNIVERSARY/*.JPG',   { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
-const _ann17Videos  = import.meta.glob('../assets/5TH ANNIVERSARY/*.MP4',   { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
+const _ann17PhotosUpper = import.meta.glob('../assets/5TH ANNIVERSARY/*.JPG',  { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
+const _ann17PhotosLower = import.meta.glob('../assets/5TH ANNIVERSARY/*.jpg',  { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
+const _ann17Gif         = import.meta.glob('../assets/5TH ANNIVERSARY/*.gif',  { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
+const _ann17Photos = { ..._ann17PhotosUpper, ..._ann17PhotosLower, ..._ann17Gif };
+const _ann17VideosUpper = import.meta.glob('../assets/5TH ANNIVERSARY/*.MP4', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
+const _ann17VideosLower = import.meta.glob('../assets/5TH ANNIVERSARY/*.mp4', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
+const _ann17Videos = { ..._ann17VideosUpper, ..._ann17VideosLower };
 
 const _thx17Photos  = import.meta.glob('../assets/5TH ANNIVERSARY THANKSGIVING SERVICE/*.JPG', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
 const _thx17Videos  = import.meta.glob('../assets/5TH ANNIVERSARY THANKSGIVING SERVICE/*.MP4', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
@@ -110,7 +116,7 @@ const GhostYear = ({ year }: { year: string }) => {
     <div ref={ref} className="absolute -top-6 left-0 right-0 overflow-hidden pointer-events-none select-none" aria-hidden>
       <motion.span
         style={{ y, fontSize: 'clamp(7rem, 20vw, 18rem)' }}
-        className="block font-heading font-bold leading-none text-primary/[0.055]"
+        className="block font-subheading font-bold leading-none text-primary/[0.055]"
       >
         {year}
       </motion.span>
@@ -166,6 +172,11 @@ const FadeUp = ({ children, delay = 0, className = '' }: { children: React.React
 // ─── Page ──────────────────────────────────────────────────────────────────────
 
 export default function HighlightsPage() {
+  usePageMeta({
+    title: 'Highlights',
+    description: 'A decade of unity, culture, and belonging — captured in the videos and photographs that tell our story.',
+  });
+
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress: heroScroll } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
   const heroY       = useTransform(heroScroll, [0, 1], ['0%', '25%']);
@@ -379,7 +390,7 @@ export default function HighlightsPage() {
                   </div>
                 </div>
                 <div className="p-6">
-                  <h3 className="font-heading text-xl font-semibold text-foreground">Summer in the Netherlands</h3>
+                  <h3 className="font-subheading text-xl font-semibold text-foreground">Summer in the Netherlands</h3>
                   <p className="font-body text-[14px] text-muted-foreground leading-relaxed mt-2">
                     Families, food, and the familiar warmth of a community that had already made this tradition its own.
                   </p>
@@ -415,7 +426,7 @@ export default function HighlightsPage() {
               className="pt-4 lg:pt-20"
             >
               <div className="border-l-4 border-secondary pl-7">
-                <p className="font-heading text-2xl font-medium italic text-foreground leading-snug">
+                <p className="font-subheading text-2xl font-medium italic text-foreground leading-snug">
                   "The GaDangme spirit is not about where you are — it is about who you are with."
                 </p>
                 <p className="font-body text-[12px] text-muted-foreground mt-4 uppercase tracking-wider font-semibold">
@@ -467,7 +478,7 @@ export default function HighlightsPage() {
             </FadeUp>
             <FadeUp delay={0.15} className="lg:col-span-2">
               <span className="section-eyebrow text-secondary block mb-4">Daantaa Celebration</span>
-              <h3 className="font-heading text-3xl font-semibold text-foreground mb-4 leading-tight">
+              <h3 className="font-subheading text-3xl font-semibold text-foreground mb-4 leading-tight">
                 Rooted in Culture,<br />Alive in the Diaspora
               </h3>
               <p className="font-body text-[15px] text-muted-foreground leading-[1.85]">
@@ -506,7 +517,7 @@ export default function HighlightsPage() {
       <section className="relative py-28 md:py-36 bg-primary overflow-hidden">
         <div className="absolute top-0 left-0 right-0 h-[3px] bg-secondary/60" />
         <div className="absolute -top-6 left-0 right-0 overflow-hidden pointer-events-none select-none" aria-hidden>
-          <span className="block font-heading font-bold leading-none text-primary-foreground/[0.04]"
+          <span className="block font-subheading font-bold leading-none text-primary-foreground/[0.04]"
             style={{ fontSize: 'clamp(7rem, 20vw, 18rem)' }}>2017</span>
         </div>
 
@@ -526,7 +537,7 @@ export default function HighlightsPage() {
             {[{ n: '5', label: 'Years of Unity' }, { n: '100+', label: 'Members Gathered' }, { n: '2', label: 'Celebration Events' }]
               .map(({ n, label }) => (
                 <div key={label} className="bg-primary px-8 py-7 text-center">
-                  <p className="font-heading text-4xl font-bold text-secondary leading-none mb-1">{n}</p>
+                  <p className="font-subheading text-4xl font-bold text-secondary leading-none mb-1">{n}</p>
                   <p className="font-body text-[11px] text-primary-foreground/50 uppercase tracking-[0.22em] font-semibold">{label}</p>
                 </div>
               ))}

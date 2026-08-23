@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Users, Heart, Globe, Award } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Layout from '@/components/Layout';
+import { usePageMeta } from '@/hooks/use-page-meta';
 
 const _annMods = import.meta.glob(
   '../assets/5TH ANNIVERSARY THANKSGIVING SERVICE/*.JPG',
@@ -74,7 +75,7 @@ const FadingCard = ({
 
       {/* Text */}
       <div className="absolute bottom-0 left-0 right-0 p-6 z-10">
-        <h3 className="font-heading text-xl text-primary-foreground font-semibold mb-2">
+        <h3 className="font-subheading text-xl text-primary-foreground font-semibold mb-2">
           {title}
         </h3>
         <p className="font-body text-sm text-primary-foreground/75 leading-relaxed">
@@ -137,7 +138,7 @@ const stats = [
   { value: '2012', label: 'Year Founded' },
   { value: '100+', label: 'Active Members' },
   { value: '13+', label: 'Years of Unity' },
-  { value: '11', label: 'Event Albums' },
+  { value: '30', label: 'Event Albums' },
 ];
 
 const communityLifeCards = [
@@ -161,6 +162,11 @@ const communityLifeCards = [
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 const About = () => {
+  usePageMeta({
+    title: 'About Us',
+    description: 'Our mission, our history, and the people who make up the GaDangme community in the Netherlands.',
+  });
+
   return (
     <Layout>
 
@@ -206,8 +212,8 @@ const About = () => {
           transition={{ duration: 0.7 }}
           className="heritage-container max-w-4xl mx-auto text-center"
         >
-          <p className="font-heading text-6xl text-secondary leading-none mb-2 select-none">"</p>
-          <p className="font-heading text-xl md:text-2xl lg:text-3xl text-foreground italic font-medium leading-relaxed mb-6">
+          <p className="font-subheading text-6xl text-secondary leading-none mb-2 select-none">"</p>
+          <p className="font-subheading text-xl md:text-2xl lg:text-3xl text-foreground italic font-medium leading-relaxed mb-6">
             A community union built on shared roots, mutual support, and the bonds
             that unite people of GaDangme origin living in the Netherlands.
           </p>
@@ -264,7 +270,7 @@ const About = () => {
                 className="w-full rounded-2xl shadow-elevated"
               />
               <div className="absolute -bottom-5 -left-5 bg-primary text-primary-foreground px-5 py-3 rounded-xl shadow-elevated">
-                <p className="font-heading text-xl font-bold leading-none">Est. 2012</p>
+                <p className="font-subheading text-xl font-bold leading-none">Est. 2012</p>
                 <p className="font-body text-xs text-primary-foreground/70 mt-0.5">The Netherlands</p>
               </div>
             </motion.div>
@@ -284,7 +290,7 @@ const About = () => {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1, duration: 0.5 }}
               >
-                <p className="font-heading text-4xl md:text-5xl font-bold text-secondary mb-1">
+                <p className="font-subheading text-4xl md:text-5xl font-bold text-secondary mb-1">
                   {s.value}
                 </p>
                 <p className="font-body text-xs text-primary-foreground/60 uppercase tracking-widest">
@@ -353,7 +359,7 @@ const About = () => {
                 className="w-full rounded-2xl shadow-elevated mb-6"
               />
               <div className="p-6 rounded-xl bg-card border border-border">
-                <p className="font-heading text-xl italic text-foreground mb-1">
+                <p className="font-subheading text-xl italic text-foreground mb-1">
                   "Ashiii Gɔnti sɛɛ aŋmɔɔ kpɔ"
                 </p>
                 <p className="font-body text-sm text-muted-foreground">— Ga Proverb</p>
@@ -393,7 +399,7 @@ const About = () => {
                   <v.icon className="w-6 h-6 text-primary" />
                 </div>
                 <div>
-                  <h3 className="font-heading text-lg font-semibold text-foreground mb-1.5">
+                  <h3 className="font-subheading text-lg font-semibold text-foreground mb-1.5">
                     {v.title}
                   </h3>
                   <p className="font-body text-sm text-muted-foreground leading-relaxed">

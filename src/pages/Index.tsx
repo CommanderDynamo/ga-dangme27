@@ -8,6 +8,7 @@ import {
 import useEmblaCarousel from 'embla-carousel-react';
 import Layout from '@/components/Layout';
 import CulturalModal, { type CulturalItem } from '@/components/CulturalModal';
+import { usePageMeta } from '@/hooks/use-page-meta';
 
 // ─── Asset loading ─────────────────────────────────────────────────────────────
 
@@ -127,7 +128,7 @@ const FadingPhotoCard = ({
       {/* Text reveal */}
       <div className="absolute bottom-0 left-0 right-0 p-6 z-10">
         <span className="block w-6 h-[2px] bg-secondary mb-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-        <h3 className="font-heading text-xl text-white font-semibold mb-2 leading-snug">
+        <h3 className="font-subheading text-xl text-white font-semibold mb-2 leading-snug">
           {item.title}
         </h3>
         <p className="font-body text-[13px] text-white/65 opacity-0 group-hover:opacity-100 transition-opacity duration-300 line-clamp-2 leading-relaxed">
@@ -144,6 +145,11 @@ const FadingPhotoCard = ({
 // ─── Page component ────────────────────────────────────────────────────────────
 
 const Index = () => {
+  usePageMeta({
+    title: 'Home',
+    description: 'GaDangme Union - The Netherlands | Preserving our heritage, uniting our people since 2012.',
+  });
+
   const [selectedItem, setSelectedItem] = useState<CulturalItem | null>(null);
   const [videoPlaying, setVideoPlaying] = useState(false);
 
@@ -274,7 +280,7 @@ const Index = () => {
                   style={{ animationDelay: `${0.7 + i * 0.08}s`, opacity: 0, animationFillMode: 'forwards' }}
                 >
                   <s.icon className="w-3.5 h-3.5 text-secondary mx-auto mb-2" />
-                  <p className="font-heading text-2xl font-bold text-foreground leading-none tracking-tight mb-1">
+                  <p className="font-subheading text-2xl font-bold text-foreground leading-none tracking-tight mb-1">
                     {s.value}
                   </p>
                   <p className="font-body text-[10.5px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
@@ -355,7 +361,7 @@ const Index = () => {
                   />
                   {/* Years badge pinned to bottom-left of this photo */}
                   <div className="absolute bottom-4 left-4 bg-primary text-primary-foreground px-5 py-4 rounded-xl shadow-elevated">
-                    <p className="font-heading text-3xl font-bold leading-none tracking-tight">13+</p>
+                    <p className="font-subheading text-3xl font-bold leading-none tracking-tight">13+</p>
                     <p className="font-body text-[10px] text-primary-foreground/65 mt-1 uppercase tracking-[0.18em]">Years of Unity</p>
                   </div>
                 </div>
@@ -378,7 +384,7 @@ const Index = () => {
                     {/* Founded badge on this photo */}
                     <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-4 py-2.5 rounded-lg shadow-soft">
                       <p className="font-body text-[9px] text-muted-foreground uppercase tracking-[0.2em]">Founded</p>
-                      <p className="font-heading text-lg font-bold text-foreground leading-none mt-0.5">2012</p>
+                      <p className="font-subheading text-lg font-bold text-foreground leading-none mt-0.5">2012</p>
                     </div>
                   </div>
                 </div>
