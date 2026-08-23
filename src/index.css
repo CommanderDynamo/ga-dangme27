@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Lato:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500;1,600&family=Arimo:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Lato:wght@300;400;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -126,7 +126,7 @@
   }
 
   .heritage-subheading {
-    @apply font-heading text-xl md:text-2xl font-medium leading-snug;
+    @apply font-subheading text-xl md:text-2xl font-medium leading-snug;
   }
 
   .heritage-text {

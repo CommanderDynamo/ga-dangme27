@@ -43,12 +43,12 @@ const Header = () => {
           <Link to="/" className="flex items-center gap-3 group flex-shrink-0" aria-label="GaDangme Union home">
             {/* Monogram emblem */}
             <div className="w-9 h-9 rounded-full border-2 border-secondary flex items-center justify-center transition-colors duration-250 group-hover:bg-secondary/20">
-              <span className="font-heading font-bold text-secondary text-base leading-none">G</span>
+              <span className="font-subheading font-bold text-secondary text-base leading-none">G</span>
             </div>
 
             {/* Text wordmark */}
             <div className="flex flex-col leading-none">
-              <span className="font-heading font-semibold text-[1.05rem] text-white tracking-[-0.01em] leading-tight">
+              <span className="font-subheading font-semibold text-[1.05rem] text-white tracking-[-0.01em] leading-tight">
                 GaDangme&thinsp;<em className="not-italic text-secondary">Union</em>
               </span>
               <span className="font-body text-[9.5px] font-semibold uppercase tracking-[0.28em] text-white/50 mt-0.5">

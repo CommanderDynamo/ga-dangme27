@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Mail } from 'lucide-react';
+import { Mail, MapPin } from 'lucide-react';
 
 const socialLinks = [
   {
@@ -8,26 +8,6 @@ const socialLinks = [
     icon: (
       <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
         <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-      </svg>
-    ),
-  },
-  {
-    label: 'Instagram',
-    href: '#',
-    icon: (
-      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-        <circle cx="12" cy="12" r="4" />
-        <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none" />
-      </svg>
-    ),
-  },
-  {
-    label: 'YouTube',
-    href: '#',
-    icon: (
-      <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
-        <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.96-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58zM9.75 15.02V8.98L15.5 12l-5.75 3.02z" />
       </svg>
     ),
   },
@@ -46,10 +26,10 @@ const Footer = () => {
             {/* Logotype — matches header */}
             <div className="flex items-center gap-3 mb-5">
               <div className="w-9 h-9 rounded-full border-2 border-secondary flex items-center justify-center flex-shrink-0">
-                <span className="font-heading font-bold text-secondary text-base leading-none">G</span>
+                <span className="font-subheading font-bold text-secondary text-base leading-none">G</span>
               </div>
               <div className="flex flex-col leading-none">
-                <span className="font-heading font-semibold text-[1.05rem] text-white tracking-[-0.01em]">
+                <span className="font-subheading font-semibold text-[1.05rem] text-white tracking-[-0.01em]">
                   GaDangme&thinsp;<em className="not-italic text-secondary">Union</em>
                 </span>
                 <span className="font-body text-[9.5px] font-semibold uppercase tracking-[0.28em] text-white/45 mt-0.5">
@@ -81,7 +61,7 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-heading text-lg font-semibold mb-5 relative inline-block after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-8 after:h-0.5 after:bg-secondary">
+            <h4 className="font-subheading text-lg font-semibold mb-5 relative inline-block after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-8 after:h-0.5 after:bg-secondary">
               Quick Links
             </h4>
             <nav className="flex flex-col gap-3 mt-2">
@@ -106,7 +86,7 @@ const Footer = () => {
 
           {/* Community */}
           <div>
-            <h4 className="font-heading text-lg font-semibold mb-5 relative inline-block after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-8 after:h-0.5 after:bg-secondary">
+            <h4 className="font-subheading text-lg font-semibold mb-5 relative inline-block after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-8 after:h-0.5 after:bg-secondary">
               Community
             </h4>
             <nav className="flex flex-col gap-3 mt-2">
@@ -124,12 +104,12 @@ const Footer = () => {
 
           {/* Contact Info */}
           <div>
-            <h4 className="font-heading text-lg font-semibold mb-5 relative inline-block after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-8 after:h-0.5 after:bg-secondary">
+            <h4 className="font-subheading text-lg font-semibold mb-5 relative inline-block after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-8 after:h-0.5 after:bg-secondary">
               Contact Us
             </h4>
             <div className="font-body text-sm text-primary-foreground/70 space-y-4 mt-2">
               <p className="flex items-start gap-3">
-                <span className="text-secondary mt-0.5">📍</span>
+                <MapPin size={16} className="text-secondary mt-0.5 flex-shrink-0" />
                 The Netherlands
               </p>
               <a href="mailto:pnyanyo@gmail.com" className="flex items-start gap-3 hover:text-secondary transition-colors">
@@ -140,7 +120,7 @@ const Footer = () => {
 
             {/* Ga Proverb */}
             <div className="mt-8 p-4 rounded-lg bg-primary-foreground/5 border border-primary-foreground/10">
-              <p className="font-heading text-sm italic text-secondary">
+              <p className="font-subheading text-sm italic text-secondary">
                 "Ashiii Gɔnti sɛɛ aŋmɔɔ kpɔ"
               </p>
               <p className="font-body text-xs text-primary-foreground/50 mt-1">

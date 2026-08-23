@@ -136,7 +136,7 @@ const ChatBot = () => {
             <div className="flex items-center justify-between px-4 py-3 bg-primary text-primary-foreground">
               <div className="flex items-center gap-2">
                 <Bot className="w-5 h-5" />
-                <span className="font-heading font-semibold text-sm">GaDangme Event Assistant</span>
+                <span className="font-subheading font-semibold text-sm">GaDangme Event Assistant</span>
               </div>
               <button onClick={() => setIsOpen(false)} className="hover:bg-primary-foreground/20 rounded p-1 transition-colors">
                 <X className="w-4 h-4" />
