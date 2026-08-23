@@ -20,6 +20,15 @@ dist-ssr
 *.mp4
 *.MP4
 
+# Exceptions: these albums are 100% video (no photos), so excluding their
+# videos left the album completely empty on the deployed site. Each file
+# below is individually under GitHub's 100MB push limit.
+!src/assets/2018 ATADAAN/*.mp4
+!src/assets/PHILADEPHIA DECEMBER 2018/VID-20251107-WA0006.mp4
+!src/assets/PHILADEPHIA DECEMBER 2018/VID-20251107-WA0007.mp4
+!src/assets/PHILADEPHIA DECEMBER 2018/VID-20251107-WA0008.mp4
+!src/assets/PHILADEPHIA DECEMBER 2018/VID-20251107-WA0010.mp4
+
 # Claude Code session data
 .claude
 
