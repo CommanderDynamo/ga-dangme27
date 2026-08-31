@@ -263,6 +263,15 @@ const Index = () => {
                   Our Story
                 </Link>
               </div>
+
+              {/* Ga Proverb */}
+              <p
+                className="font-subheading text-sm italic text-secondary/85 leading-relaxed mt-9 animate-fade-in-up"
+                style={{ animationDelay: '0.8s', opacity: 0, animationFillMode: 'forwards' }}
+              >
+                "Kwɛ Bɔ Ni Ehi, Kwɛ Bɔ Ni Eyɔɔ Fɛo!<br />
+                Ashiii Gɔŋti Aŋmɔɔɔ Kpɔ"
+              </p>
             </div>
           </div>
         </div>

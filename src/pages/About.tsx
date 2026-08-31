@@ -359,8 +359,9 @@ const About = () => {
                 className="w-full rounded-2xl shadow-elevated mb-6"
               />
               <div className="p-6 rounded-xl bg-card border border-border">
-                <p className="font-subheading text-xl italic text-foreground mb-1">
-                  "Ashiii Gɔnti sɛɛ aŋmɔɔ kpɔ"
+                <p className="font-subheading text-lg italic text-foreground leading-snug mb-2">
+                  "Kwɛ Bɔ Ni Ehi, Kwɛ Bɔ Ni Eyɔɔ Fɛo!<br />
+                  Ashiii Gɔŋti Aŋmɔɔɔ Kpɔ"
                 </p>
                 <p className="font-body text-sm text-muted-foreground">— Ga Proverb</p>
               </div>

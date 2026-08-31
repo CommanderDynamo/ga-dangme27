@@ -95,10 +95,13 @@ const ChatBot = () => {
           }
         }
       }
-    } catch (err: any) {
+    } catch (err) {
       setMessages((prev) => [
         ...prev,
-        { role: 'assistant', content: err.message || 'Sorry, something went wrong. Please try again.' },
+        {
+          role: 'assistant',
+          content: err instanceof Error ? err.message : 'Sorry, something went wrong. Please try again.',
+        },
       ]);
     } finally {
       setIsLoading(false);

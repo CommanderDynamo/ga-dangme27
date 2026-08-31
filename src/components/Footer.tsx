@@ -120,8 +120,9 @@ const Footer = () => {
 
             {/* Ga Proverb */}
             <div className="mt-8 p-4 rounded-lg bg-primary-foreground/5 border border-primary-foreground/10">
-              <p className="font-subheading text-sm italic text-secondary">
-                "Ashiii Gɔnti sɛɛ aŋmɔɔ kpɔ"
+              <p className="font-subheading text-sm italic text-secondary leading-relaxed">
+                "Kwɛ Bɔ Ni Ehi, Kwɛ Bɔ Ni Eyɔɔ Fɛo!<br />
+                Ashiii Gɔŋti Aŋmɔɔɔ Kpɔ"
               </p>
               <p className="font-body text-xs text-primary-foreground/50 mt-1">
                 — Ga Proverb

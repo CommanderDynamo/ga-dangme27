@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, MapPin, Phone, Send, Clock } from 'lucide-react';
+import { Mail, MapPin, Phone, Clock } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Layout from '@/components/Layout';
 import { usePageMeta } from '@/hooks/use-page-meta';
+import { useEvents, getEventStatus, FALLBACK_EVENT } from '@/hooks/use-events';
 import contactBanner from '../assets/Contact banner.jpg';
 
-const CONTACT_EMAIL = 'pnyanyo@gmail.com';
 const WHATSAPP_NUMBER = '31620336237'; // +31 6 20336237, in wa.me format (no + or spaces)
 
 const WhatsAppIcon = ({ className }: { className?: string }) => (
@@ -15,12 +15,7 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const contactInfo = [
-  {
-    icon: MapPin,
-    title: 'Location',
-    details: 'The Netherlands',
-  },
+const staticContactInfo = [
   {
     icon: Mail,
     title: 'Email',
@@ -31,6 +26,7 @@ const contactInfo = [
     icon: Phone,
     title: 'Phone',
     details: '+31 6 20336237',
+    link: 'tel:+31620336237',
   },
   {
     icon: Clock,
@@ -45,6 +41,21 @@ const Contact = () => {
     description: "Have questions about the GaDangme Union or want to get involved? We'd love to hear from you.",
   });
 
+  const { events } = useEvents();
+  const upcomingEvent = events.find((e) => getEventStatus(e.start_date, e.end_date) === 'upcoming');
+  const locationText = upcomingEvent?.location || FALLBACK_EVENT.location || 'The Netherlands';
+
+  const contactInfo = [
+    {
+      icon: MapPin,
+      title: 'Location',
+      details: locationText,
+      link: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(locationText)}`,
+      external: true,
+    },
+    ...staticContactInfo,
+  ];
+
   const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: '',
@@ -58,29 +69,13 @@ const Contact = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleWhatsApp = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const subject = formData.subject || `Message from ${formData.name}`;
-    const body = `${formData.message}\n\n— ${formData.name} (${formData.email})`;
-    const gmailComposeUrl =
-      `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(CONTACT_EMAIL)}` +
-      `&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-
-    window.open(gmailComposeUrl, '_blank', 'noopener,noreferrer');
-
-    toast({
-      title: 'Opening Gmail…',
-      description: 'A prefilled message has opened in a new tab — just hit send.',
-    });
-    setFormData({ name: '', email: '', subject: '', message: '' });
-  };
-
-  const handleWhatsApp = () => {
     if (!formData.name || !formData.email || !formData.message) {
       toast({
         title: 'A few details are missing',
-        description: 'Please fill in your name, email, and message before sending via WhatsApp.',
+        description: 'Please fill in your name, email, and message before sending.',
         variant: 'destructive',
       });
       return;
@@ -160,7 +155,11 @@ const Contact = () => {
                         {item.title}
                       </h3>
                       {item.link ? (
-                        <a href={item.link} className="font-body text-sm text-muted-foreground hover:text-primary transition-colors">
+                        <a
+                          href={item.link}
+                          {...(item.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                          className="font-body text-sm text-muted-foreground hover:text-primary transition-colors"
+                        >
                           {item.details}
                         </a>
                       ) : (
@@ -181,8 +180,9 @@ const Contact = () => {
                   unites and supports the GaDangme community in the diaspora through
                   cultural events, community engagement, and heritage preservation.
                 </p>
-                <p className="font-subheading text-sm italic text-primary">
-                  "Ashiii Gɔnti sɛɛ aŋmɔɔ kpɔ"
+                <p className="font-subheading text-sm italic text-primary leading-relaxed">
+                  "Kwɛ Bɔ Ni Ehi, Kwɛ Bɔ Ni Eyɔɔ Fɛo!<br />
+                  Ashiii Gɔŋti Aŋmɔɔɔ Kpɔ"
                 </p>
               </div>
             </motion.div>
@@ -202,7 +202,7 @@ const Contact = () => {
                 <p className="font-body text-sm text-muted-foreground mb-8">
                   Fill in the form below and we'll get back to you as soon as possible.
                 </p>
-                <form onSubmit={handleSubmit} className="space-y-5">
+                <form onSubmit={handleWhatsApp} className="space-y-5">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
                       <label htmlFor="name" className="block font-body text-sm font-medium text-foreground mb-2">
@@ -249,24 +249,22 @@ const Contact = () => {
                     />
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <button type="submit" className="btn-heritage text-base">
-                      <span className="flex items-center justify-center gap-2">
-                        <Send className="w-4 h-4" />
-                        Send via Email
-                      </span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleWhatsApp}
-                      className="text-base inline-flex items-center justify-center px-7 py-3.5 rounded-lg bg-[#25D366] text-white font-body font-semibold tracking-wide transition-all duration-300 ease-out hover:bg-[#1fbd5a] hover:shadow-elevated hover:-translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2"
-                    >
-                      <span className="flex items-center justify-center gap-2">
-                        <WhatsAppIcon />
-                        Send via WhatsApp
-                      </span>
-                    </button>
-                  </div>
+                  <button
+                    type="submit"
+                    className="w-full text-base inline-flex items-center justify-center px-7 py-3.5 rounded-lg bg-[#25D366] text-white font-body font-semibold tracking-wide transition-all duration-300 ease-out hover:bg-[#1fbd5a] hover:shadow-elevated hover:-translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2"
+                  >
+                    <span className="flex items-center justify-center gap-2">
+                      <WhatsAppIcon />
+                      Send via WhatsApp
+                    </span>
+                  </button>
+
+                  <p className="text-center font-body text-sm text-muted-foreground">
+                    Or email us at{' '}
+                    <a href="mailto:pnyanyo@gmail.com" className="text-primary font-semibold hover:underline">
+                      pnyanyo@gmail.com
+                    </a>
+                  </p>
                 </form>
               </div>
             </motion.div>

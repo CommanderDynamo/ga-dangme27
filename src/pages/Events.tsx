@@ -1,24 +1,35 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
-  Calendar, MapPin, Phone, CalendarPlus, CalendarClock, ArrowRight, History,
+  Calendar, MapPin, Phone, CalendarPlus, CalendarClock, ArrowRight, History, CheckCircle2, Loader2,
 } from 'lucide-react';
 import Layout from '@/components/Layout';
 import { usePageMeta } from '@/hooks/use-page-meta';
+import { useEvents, getEventStatus, FALLBACK_EVENT, type EventRow } from '@/hooks/use-events';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 import { albums, type Album } from './Gallery';
-import eventPoster from '../assets/Event Poster.jpg';
 
 // ─── Event status ───────────────────────────────────────────────────────────
 
-type EventStatus = 'past' | 'current' | 'upcoming';
+const formatDateLabel = (isoDate: string) =>
+  new Date(`${isoDate}T00:00:00`).toLocaleDateString('en-GB', {
+    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+  });
 
-const getEventStatus = (startDate: string, endDate?: string): EventStatus => {
-  const now = new Date();
-  const start = new Date(`${startDate}T00:00:00`);
-  const end = new Date(`${endDate ?? startDate}T23:59:59`);
-  if (now > end) return 'past';
-  if (now >= start) return 'current';
-  return 'upcoming';
+const buildCalendarUrl = (event: EventRow) => {
+  const start = event.start_date.replace(/-/g, '');
+  const endDate = new Date(`${event.end_date ?? event.start_date}T00:00:00`);
+  endDate.setDate(endDate.getDate() + 1); // Google Calendar's all-day end date is exclusive
+  const end = endDate.toISOString().slice(0, 10).replace(/-/g, '');
+  return (
+    'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+    `&text=${encodeURIComponent(`${event.title} – GaDangme Netherlands`)}` +
+    `&dates=${start}/${end}` +
+    `&details=${encodeURIComponent(event.description ?? '')}` +
+    `&location=${encodeURIComponent(event.location ?? '')}`
+  );
 };
 
 // ─── Data ────────────────────────────────────────────────────────────────────
@@ -32,26 +43,6 @@ const contactNumbers = [
   { raw: '+31613603026', display: '+31 6 13603026' },
   { raw: '+31615326643', display: '+31 6 15326643' },
 ];
-
-const featuredEvent = {
-  id: 'homowo-2026',
-  title: 'HOMOWO Festival',
-  dateLabel: 'Saturday, 19 September 2026',
-  startDate: '2026-09-19',
-  location: 'Amsterdam, The Netherlands',
-  description:
-    'Come and celebrate HOMOWO Festival with us in Amsterdam. Meet GaDangmes from across the Netherlands as we honour our heritage together.',
-  image: eventPoster,
-};
-
-const featuredStatus = getEventStatus(featuredEvent.startDate);
-
-const calendarUrl =
-  'https://calendar.google.com/calendar/render?action=TEMPLATE' +
-  `&text=${encodeURIComponent('HOMOWO Festival – GaDangme Netherlands')}` +
-  '&dates=20260919/20260920' +
-  `&details=${encodeURIComponent('Come and celebrate HOMOWO Festival with GaDangme Netherlands in Amsterdam.')}` +
-  `&location=${encodeURIComponent('Amsterdam, The Netherlands')}`;
 
 // Curated real highlights from the Gallery — no invented events, only ones we have actual coverage of.
 const pastHighlightIds = ['2012-bbq', '2013-bbq', '5th-anniversary-thanksgiving', '2018-atadaan'];
@@ -98,7 +89,90 @@ const EmptyState = ({
   </div>
 );
 
-const FeaturedEventCard = ({ live }: { live: boolean }) => (
+const RsvpForm = ({ eventId }: { eventId: string }) => {
+  const { toast } = useToast();
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [guestCount, setGuestCount] = useState(1);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim() || !email.trim()) return;
+
+    setSubmitting(true);
+    const { error } = await supabase
+      .from('rsvps')
+      .insert({ event_id: eventId, name: name.trim(), email: email.trim(), guest_count: guestCount });
+    setSubmitting(false);
+
+    if (error) {
+      toast({
+        title: 'Could not submit RSVP',
+        description: error.message,
+        variant: 'destructive',
+      });
+      return;
+    }
+    setSubmitted(true);
+  };
+
+  if (submitted) {
+    return (
+      <div className="p-5 rounded-xl bg-primary/10 border border-primary/20 flex items-start gap-3">
+        <CheckCircle2 className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+        <div>
+          <p className="font-subheading text-sm font-semibold text-foreground">You're on the list!</p>
+          <p className="font-body text-xs text-muted-foreground mt-0.5">We can't wait to see you there.</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="p-5 rounded-xl bg-heritage-warm border border-border space-y-3">
+      <h3 className="font-subheading text-base font-semibold text-foreground">RSVP for this event</h3>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <input
+          type="text"
+          required
+          placeholder="Your name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="input-heritage"
+        />
+        <input
+          type="email"
+          required
+          placeholder="Email address"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="input-heritage"
+        />
+      </div>
+      <div className="flex items-center gap-3">
+        <label htmlFor="guest-count" className="font-body text-sm text-muted-foreground shrink-0">
+          Guests (incl. you)
+        </label>
+        <input
+          id="guest-count"
+          type="number"
+          min={1}
+          max={20}
+          value={guestCount}
+          onChange={(e) => setGuestCount(Number(e.target.value))}
+          className="input-heritage w-20"
+        />
+      </div>
+      <button type="submit" disabled={submitting} className="btn-heritage-gold w-full sm:w-auto disabled:opacity-60">
+        {submitting ? 'Submitting…' : 'RSVP'}
+      </button>
+    </form>
+  );
+};
+
+const FeaturedEventCard = ({ event, live }: { event: EventRow; live: boolean }) => (
   <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
     {/* Poster */}
     <motion.div
@@ -109,8 +183,8 @@ const FeaturedEventCard = ({ live }: { live: boolean }) => (
       className="rounded-2xl overflow-hidden shadow-elevated border border-border/60 mx-auto max-w-md lg:max-w-full"
     >
       <img
-        src={featuredEvent.image}
-        alt="HOMOWO Festival 2026 — GaDangme Netherlands event poster, Saturday 19 September 2026 in Amsterdam"
+        src={event.poster_url ?? '/og-events-poster.jpg'}
+        alt={`${event.title} — ${formatDateLabel(event.start_date)}${event.location ? `, ${event.location}` : ''}`}
         className="w-full h-auto"
       />
     </motion.div>
@@ -127,9 +201,11 @@ const FeaturedEventCard = ({ live }: { live: boolean }) => (
         <span className="section-eyebrow">{live ? 'Happening Now' : 'Community Celebration'}</span>
       </div>
       <h2 className="heritage-heading text-foreground text-3xl md:text-4xl mb-4">
-        {featuredEvent.title}
+        {event.title}
       </h2>
-      <p className="heritage-text text-muted-foreground mb-8">{featuredEvent.description}</p>
+      {event.description && (
+        <p className="heritage-text text-muted-foreground mb-8">{event.description}</p>
+      )}
 
       <div className="space-y-5 mb-8">
         <div className="flex items-start gap-4">
@@ -138,19 +214,21 @@ const FeaturedEventCard = ({ live }: { live: boolean }) => (
           </div>
           <div>
             <h3 className="font-subheading text-base font-semibold text-foreground mb-0.5">Date</h3>
-            <p className="font-body text-sm text-muted-foreground">{featuredEvent.dateLabel}</p>
+            <p className="font-body text-sm text-muted-foreground">{formatDateLabel(event.start_date)}</p>
           </div>
         </div>
 
-        <div className="flex items-start gap-4">
-          <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-primary/10 flex-shrink-0">
-            <MapPin className="w-5 h-5 text-primary" />
+        {event.location && (
+          <div className="flex items-start gap-4">
+            <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-primary/10 flex-shrink-0">
+              <MapPin className="w-5 h-5 text-primary" />
+            </div>
+            <div>
+              <h3 className="font-subheading text-base font-semibold text-foreground mb-0.5">Location</h3>
+              <p className="font-body text-sm text-muted-foreground">{event.location}</p>
+            </div>
           </div>
-          <div>
-            <h3 className="font-subheading text-base font-semibold text-foreground mb-0.5">Location</h3>
-            <p className="font-body text-sm text-muted-foreground">{featuredEvent.location}</p>
-          </div>
-        </div>
+        )}
 
         <div className="flex items-start gap-4">
           <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-primary/10 flex-shrink-0">
@@ -190,13 +268,35 @@ const FeaturedEventCard = ({ live }: { live: boolean }) => (
       </div>
 
       {!live && (
-        <a href={calendarUrl} target="_blank" rel="noopener noreferrer" className="btn-heritage-gold">
+        <a href={buildCalendarUrl(event)} target="_blank" rel="noopener noreferrer" className="btn-heritage-gold mb-9 inline-flex">
           <CalendarPlus className="mr-2 h-4 w-4" />
           Add to Calendar
         </a>
       )}
+
+      {/* RSVPs only make sense for real, database-backed events */}
+      {event.id && <RsvpForm eventId={event.id} />}
     </motion.div>
   </div>
+);
+
+const PastEventCard = ({ title, dateLabel, image }: { title: string; dateLabel: string; image: string }) => (
+  <Link to="/gallery" className="card-heritage group block">
+    <div className="aspect-[4/3] overflow-hidden">
+      <img
+        src={image}
+        alt={title}
+        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+      />
+    </div>
+    <div className="p-5">
+      <p className="font-body text-xs font-semibold uppercase tracking-wide text-secondary mb-1">{dateLabel}</p>
+      <h3 className="font-subheading text-base font-semibold text-foreground mb-2">{title}</h3>
+      <span className="inline-flex items-center gap-1.5 text-sm text-primary font-semibold">
+        View in Gallery <ArrowRight size={14} />
+      </span>
+    </div>
+  </Link>
 );
 
 // ─── Page ────────────────────────────────────────────────────────────────────
@@ -207,6 +307,16 @@ const Events = () => {
     description: 'Save the date: HOMOWO Festival with GaDangme Netherlands, Saturday 19 September 2026 in Amsterdam.',
     image: '/og-events-poster.jpg',
   });
+
+  const { events, loading, error } = useEvents();
+
+  // Fall back to the static event if the table isn't set up yet or is empty,
+  // so the page never looks broken while the migration hasn't been run.
+  const sourceEvents = !loading && (error || events.length === 0) ? [FALLBACK_EVENT] : events;
+
+  const upcomingEvents = sourceEvents.filter((e) => getEventStatus(e.start_date, e.end_date) === 'upcoming');
+  const currentEvents = sourceEvents.filter((e) => getEventStatus(e.start_date, e.end_date) === 'current');
+  const pastDbEvents = sourceEvents.filter((e) => getEventStatus(e.start_date, e.end_date) === 'past');
 
   return (
     <Layout>
@@ -245,8 +355,17 @@ const Events = () => {
             <span className="section-eyebrow">Upcoming Events</span>
           </div>
 
-          {featuredStatus === 'upcoming' ? (
-            <FeaturedEventCard live={false} />
+          {loading ? (
+            <div className="flex items-center justify-center gap-3 py-16 text-muted-foreground">
+              <Loader2 className="w-5 h-5 animate-spin" />
+              <span className="font-body text-sm">Loading events…</span>
+            </div>
+          ) : upcomingEvents.length > 0 ? (
+            <div className="space-y-16">
+              {upcomingEvents.map((event) => (
+                <FeaturedEventCard key={event.id || event.title} event={event} live={false} />
+              ))}
+            </div>
           ) : (
             <EmptyState
               icon={CalendarClock}
@@ -267,9 +386,13 @@ const Events = () => {
             <span className="section-eyebrow">Current Events</span>
           </div>
 
-          {featuredStatus === 'current' ? (
-            <FeaturedEventCard live />
-          ) : (
+          {!loading && currentEvents.length > 0 ? (
+            <div className="space-y-16">
+              {currentEvents.map((event) => (
+                <FeaturedEventCard key={event.id || event.title} event={event} live />
+              ))}
+            </div>
+          ) : !loading ? (
             <EmptyState
               icon={CalendarClock}
               title="No Events In Progress"
@@ -277,7 +400,7 @@ const Events = () => {
               ctaLabel="View Upcoming Events"
               ctaHref="#upcoming"
             />
-          )}
+          ) : null}
         </div>
       </section>
 
@@ -290,50 +413,22 @@ const Events = () => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-            {featuredStatus === 'past' && (
-              <Link to="/gallery" className="card-heritage group block">
-                <div className="aspect-[4/3] overflow-hidden">
-                  <img
-                    src={featuredEvent.image}
-                    alt={featuredEvent.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
-                <div className="p-5">
-                  <p className="font-body text-xs font-semibold uppercase tracking-wide text-secondary mb-1">
-                    {featuredEvent.dateLabel}
-                  </p>
-                  <h3 className="font-subheading text-base font-semibold text-foreground mb-2">
-                    {featuredEvent.title}
-                  </h3>
-                  <span className="inline-flex items-center gap-1.5 text-sm text-primary font-semibold">
-                    View in Gallery <ArrowRight size={14} />
-                  </span>
-                </div>
-              </Link>
-            )}
+            {pastDbEvents.map((event) => (
+              <PastEventCard
+                key={event.id || event.title}
+                title={event.title}
+                dateLabel={formatDateLabel(event.start_date)}
+                image={event.poster_url ?? '/og-events-poster.jpg'}
+              />
+            ))}
 
             {pastHighlights.map((album) => (
-              <Link key={album.id} to="/gallery" className="card-heritage group block">
-                <div className="aspect-[4/3] overflow-hidden">
-                  <img
-                    src={album.coverImage}
-                    alt={album.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
-                <div className="p-5">
-                  <p className="font-body text-xs font-semibold uppercase tracking-wide text-secondary mb-1">
-                    {albumDateLabel(album.subtitle)}
-                  </p>
-                  <h3 className="font-subheading text-base font-semibold text-foreground mb-2">
-                    {album.title}
-                  </h3>
-                  <span className="inline-flex items-center gap-1.5 text-sm text-primary font-semibold">
-                    View in Gallery <ArrowRight size={14} />
-                  </span>
-                </div>
-              </Link>
+              <PastEventCard
+                key={album.id}
+                title={album.title}
+                dateLabel={albumDateLabel(album.subtitle)}
+                image={album.coverImage}
+              />
             ))}
           </div>
 

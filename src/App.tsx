@@ -11,6 +11,7 @@ import Carousel from "./pages/Carousel";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 import ChatBot from "./components/ChatBot";
+import EventSplash from "./components/EventSplash";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +31,7 @@ const App = () => (
           <Route path="*" element={<NotFound />} />
         </Routes>
         <ChatBot />
+        <EventSplash />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

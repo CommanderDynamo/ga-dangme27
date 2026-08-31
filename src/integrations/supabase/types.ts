@@ -14,7 +14,77 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      // Hand-written to match supabase/migrations/001_events_and_rsvps.sql —
+      // there's no CLI access in this environment to regenerate this file,
+      // so keep it in sync manually if the schema changes.
+      events: {
+        Row: {
+          id: string
+          title: string
+          description: string | null
+          location: string | null
+          poster_url: string | null
+          start_date: string
+          end_date: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          description?: string | null
+          location?: string | null
+          poster_url?: string | null
+          start_date: string
+          end_date?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string
+          description?: string | null
+          location?: string | null
+          poster_url?: string | null
+          start_date?: string
+          end_date?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
+      rsvps: {
+        Row: {
+          id: string
+          event_id: string
+          name: string
+          email: string
+          guest_count: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          event_id: string
+          name: string
+          email: string
+          guest_count?: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          event_id?: string
+          name?: string
+          email?: string
+          guest_count?: number
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rsvps_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
