@@ -39,7 +39,7 @@ const Header = () => {
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="flex items-center h-16 md:h-[72px]">
 
-          {/* ── Logo / Wordmark — top-left ───────────────────── */}
+          
           <Link to="/" className="flex items-center gap-3 group flex-shrink-0" aria-label="GaDangme Union home">
             {/* Monogram emblem */}
             <div className="w-9 h-9 rounded-full border-2 border-secondary flex items-center justify-center transition-colors duration-250 group-hover:bg-secondary/20">

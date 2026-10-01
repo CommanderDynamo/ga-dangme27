@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { X } from 'lucide-react';
-import eventPoster from '../assets/Event Poster.jpg';
+import image1 from '../assets/Event images.jpg';
 
 const SPLASH_SESSION_KEY = 'gadangme-event-splash-shown';
 const AUTO_DISMISS_MS = 6000;
@@ -12,15 +12,14 @@ const EventSplash = () => {
   const [closing, setClosing] = useState(false);
 
   useEffect(() => {
-    // Only the homepage — landing directly on /contact, /events, etc.
-    // (a bookmark, a shared link, a refresh) should never surface this.
+    
     if (pathname !== '/') return;
 
     let alreadyShown = true;
     try {
       alreadyShown = sessionStorage.getItem(SPLASH_SESSION_KEY) === '1';
     } catch {
-      // sessionStorage unavailable (private mode, etc.) — just skip the splash
+      
       return;
     }
     if (alreadyShown) return;
@@ -29,9 +28,9 @@ const EventSplash = () => {
     try {
       sessionStorage.setItem(SPLASH_SESSION_KEY, '1');
     } catch {
-      // ignore
+     
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, []);
 
   useEffect(() => {
@@ -72,7 +71,7 @@ const EventSplash = () => {
         </button>
 
         <img
-          src={eventPoster}
+          src={Update5.jpg}
           alt="Save the date — HOMOWO Festival, Saturday 19 September 2026, in Amsterdam"
           className="w-full max-h-[70vh] object-contain rounded-2xl shadow-elevated border border-white/10"
         />

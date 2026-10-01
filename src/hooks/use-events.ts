@@ -23,7 +23,7 @@ export const FALLBACK_EVENT: EventRow = {
   description:
     'Come and celebrate HOMOWO Festival with us in Amsterdam. Meet GaDangmes from across the Netherlands as we honour our heritage together.',
   location: 'Amsterdam, The Netherlands',
-  poster_url: '/og-events-poster.jpg',
+  poster_url: '/event-poster.jpg',
   start_date: '2026-09-19',
   end_date: null,
   created_at: '',

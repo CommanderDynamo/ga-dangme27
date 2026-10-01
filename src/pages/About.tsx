@@ -212,7 +212,7 @@ const About = () => {
           transition={{ duration: 0.7 }}
           className="heritage-container max-w-4xl mx-auto text-center"
         >
-          <p className="font-subheading text-6xl text-secondary leading-none mb-2 select-none">"</p>
+          <p className="font-subheading text-6xl text-secondary/85 leading-none mb-2 select-none">"</p>
           <p className="font-subheading text-xl md:text-2xl lg:text-3xl text-foreground italic font-medium leading-relaxed mb-6">
             A community union built on shared roots, mutual support, and the bonds
             that unite people of GaDangme origin living in the Netherlands.
